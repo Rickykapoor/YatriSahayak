@@ -8,34 +8,58 @@ import SafetyStatusIndicator from '@/components/SafetyStatusIndicator';
 
 export default function TabLayout() {
   const { safetyScore, hasActiveAlerts } = useSafety();
-  const { currentTrip } = useTourist(); // Remove isTracking as it's not defined in TouristContext
+  const { currentTrip } = useTourist();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: '#8E8E93',
+        tabBarActiveTintColor: '#b45309',
+        tabBarInactiveTintColor: '#78716c',
         tabBarStyle: {
-          backgroundColor: 'white',
+          backgroundColor: '#fafaf9',
           borderTopWidth: 1,
-          borderTopColor: '#E5E5EA',
-          height: Platform.OS === 'ios' ? 85 : 70,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 10,
-          paddingTop: 8,
+          borderTopColor: '#e7e5e4',
+          height: Platform.OS === 'ios' ? 90 : 90,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 15,
+          paddingTop: 6,
+          paddingHorizontal: 4,
+          shadowColor: '#78716c',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: '600',
+          marginTop: 4,
         },
         headerShown: false,
+        tabBarItemStyle: {
+          paddingVertical: 8,
+          paddingHorizontal: 4,
+          height: Platform.OS === 'ios' ? 60 : 55,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{
+              padding: 4,
+              borderRadius: 8,
+              backgroundColor: focused ? '#fef7ed' : 'transparent',
+              minWidth: 32,
+              minHeight: 32,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <Ionicons name={focused ? 'home' : 'home-outline'} size={22} color={color} />
+            </View>
           ),
         }}
       />
@@ -44,19 +68,31 @@ export default function TabLayout() {
         name="tracking"
         options={{
           title: 'Tracking',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <View style={{ position: 'relative' }}>
-              <Ionicons name="location" size={size} color={color} />
+              <View style={{
+                padding: 4,
+                borderRadius: 8,
+                backgroundColor: focused ? '#fef7ed' : 'transparent',
+                minWidth: 32,
+                minHeight: 32,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <Ionicons name={focused ? 'location' : 'location-outline'} size={22} color={color} />
+              </View>
               {currentTrip && currentTrip.status === 'active' && (
                 <View 
                   style={{
                     position: 'absolute',
-                    top: -2,
-                    right: -2,
+                    top: 0,
+                    right: 0,
                     width: 8,
                     height: 8,
-                    backgroundColor: '#34C759',
+                    backgroundColor: '#16a34a',
                     borderRadius: 4,
+                    borderWidth: 1,
+                    borderColor: '#fafaf9',
                   }}
                 />
               )}
@@ -69,8 +105,18 @@ export default function TabLayout() {
         name="trip-planner"
         options={{
           title: 'Plan Trip',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{
+              padding: 4,
+              borderRadius: 8,
+              backgroundColor: focused ? '#fef7ed' : 'transparent',
+              minWidth: 32,
+              minHeight: 32,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={22} color={color} />
+            </View>
           ),
         }}
       />
@@ -79,13 +125,29 @@ export default function TabLayout() {
         name="safety"
         options={{
           title: 'Safety',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <View style={{ position: 'relative' }}>
-              <Ionicons name="shield-checkmark" size={size} color={color} />
+              <View style={{
+                padding: 4,
+                borderRadius: 8,
+                backgroundColor: focused ? '#fef7ed' : 'transparent',
+                minWidth: 32,
+                minHeight: 32,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <Ionicons name={focused ? 'shield-checkmark' : 'shield-checkmark-outline'} size={22} color={color} />
+              </View>
               <SafetyStatusIndicator score={safetyScore} />
             </View>
           ),
           tabBarBadge: hasActiveAlerts ? '!' : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: '#dc2626',
+            color: 'white',
+            fontSize: 10,
+            fontWeight: 'bold',
+          },
         }}
       />
       
@@ -93,8 +155,18 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{
+              padding: 4,
+              borderRadius: 8,
+              backgroundColor: focused ? '#fef7ed' : 'transparent',
+              minWidth: 32,
+              minHeight: 32,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <Ionicons name={focused ? 'person' : 'person-outline'} size={22} color={color} />
+            </View>
           ),
         }}
       />

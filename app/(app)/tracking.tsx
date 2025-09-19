@@ -56,10 +56,30 @@ const TrackingScreen = () => {
     }
   }, [isTracking, startTracking, stopTracking]);
 
+  // Default location if location is null (Mumbai coordinates as fallback)
+  const defaultLocation = {
+    latitude: 19.0760,
+    longitude: 72.8777,
+    address: 'Getting location...',
+    timestamp: Date.now(),
+    accuracy: 0,
+    trail: []
+  };
+
+  // Use location or fallback to default
+  const currentLocation = location || defaultLocation;
+
+  // Show loading state if no location
   if (!location) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-lg text-gray-500">Getting your location...</Text>
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <View className="items-center">
+          <Ionicons name="location-outline" size={64} color="#A8A29E" />
+          <Text className="text-lg text-primary-600 mt-4 mb-2">Getting your location...</Text>
+          <Text className="text-sm text-primary-500 text-center px-8">
+            Please make sure location services are enabled
+          </Text>
+        </View>
       </View>
     );
   }
@@ -67,24 +87,24 @@ const TrackingScreen = () => {
   return (
     <View className="flex-1 bg-white">
       {/* Live Status Header */}
-      <View className="flex-row p-4 pt-14 bg-white border-b border-gray-border">
+      <View className="flex-row p-4 pt-14 bg-white border-b border-primary-200">
         <View className="flex-1">
           <View className="flex-row items-center mb-1">
             <View className={`w-2 h-2 rounded-full mr-2 ${isTracking ? 'bg-success' : 'bg-danger'}`} />
-            <Text className="text-sm font-semibold text-black">
+            <Text className="text-sm font-semibold text-primary-800">
               {isTracking ? 'LIVE TRACKING' : 'TRACKING PAUSED'}
             </Text>
           </View>
-          <Text className="text-base font-medium text-black mb-0.5">
-            {location.address || `${location.latitude.toFixed(6)}, ${location.longitude.toFixed(6)}`}
+          <Text className="text-base font-medium text-primary-800 mb-0.5">
+            {currentLocation.address || `${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}`}
           </Text>
-          <Text className="text-xs text-gray-500">
-            Updated {new Date(location.timestamp).toLocaleTimeString()}
+          <Text className="text-xs text-primary-500">
+            Updated {new Date(currentLocation.timestamp).toLocaleTimeString()}
           </Text>
         </View>
         
         <Pressable 
-          className="w-11 h-11 rounded-full bg-primary justify-center items-center"
+          className={`w-11 h-11 rounded-full justify-center items-center ${isTracking ? 'bg-secondary-600' : 'bg-primary-400'}`}
           onPress={toggleTracking}
         >
           <Ionicons 
@@ -100,32 +120,32 @@ const TrackingScreen = () => {
         <MapView
           className="flex-1"
           region={{
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}
           mapType={mapType}
           showsUserLocation={true}
           showsMyLocationButton={false}
-          followsUserLocation={true}
+          followsUserLocation={isTracking}
         >
           {/* User's trail */}
-          {location.trail && (
+          {currentLocation.trail && currentLocation.trail.length > 0 && (
             <Polyline
-              coordinates={location.trail}
-              strokeColor="#007AFF"
+              coordinates={currentLocation.trail}
+              strokeColor="#B45309"
               strokeWidth={3}
               lineDashPattern={[5, 5]}
             />
           )}
 
           {/* Checkpoints */}
-          {checkpoints.map((checkpoint: Checkpoint) => (
+          {checkpoints && checkpoints.map((checkpoint: Checkpoint) => (
             <Marker
               key={checkpoint.id}
               coordinate={checkpoint.location}
-              pinColor={visitedCheckpoints.includes(checkpoint.id) ? 'green' : 'blue'}
+              pinColor={visitedCheckpoints.includes(checkpoint.id) ? '#10B981' : '#B45309'}
               title={checkpoint.name}
               description={checkpoint.description}
               onCalloutPress={() => handleCheckIn(checkpoint)}
@@ -138,8 +158,8 @@ const TrackingScreen = () => {
               key={zone.id}
               center={zone.center}
               radius={zone.radius}
-              fillColor={zone.type === 'danger' ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,0,0.2)'}
-              strokeColor={zone.type === 'danger' ? '#FF0000' : '#00FF00'}
+              fillColor={zone.type === 'danger' ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)'}
+              strokeColor={zone.type === 'danger' ? '#EF4444' : '#10B981'}
               strokeWidth={2}
             />
           ))}
@@ -148,47 +168,47 @@ const TrackingScreen = () => {
         {/* Map Controls */}
         <View className="absolute top-4 right-4 gap-2">
           <Pressable 
-            className="w-11 h-11 rounded-full bg-white justify-center items-center shadow-md"
+            className="w-11 h-11 rounded-full bg-white justify-center items-center shadow-md border border-primary-200"
             onPress={toggleMapType}
           >
-            <Ionicons name="layers" size={20} color="#007AFF" />
+            <Ionicons name="layers" size={20} color="#B45309" />
           </Pressable>
           
           <Pressable 
-            className="w-11 h-11 rounded-full bg-white justify-center items-center shadow-md"
+            className="w-11 h-11 rounded-full bg-white justify-center items-center shadow-md border border-primary-200"
             onPress={toggleHistory}
           >
-            <Ionicons name="time" size={20} color="#007AFF" />
+            <Ionicons name="time" size={20} color="#B45309" />
           </Pressable>
         </View>
       </View>
 
       {/* Bottom Panel */}
-      <View className="bg-white border-t border-gray-border pb-8">
+      <View className="bg-white border-t border-primary-200 pb-8">
         {!showHistory ? (
           <>
-            <TrackingStats location={location} currentTrip={currentTrip} />
+            <TrackingStats location={currentLocation} currentTrip={currentTrip} />
             
             <View className="flex-row justify-around py-4">
               <Pressable className="items-center" onPress={() => handleCheckIn}>
-                <Ionicons name="checkmark-circle" size={24} color="#34C759" />
-                <Text className="text-xs text-black font-medium mt-1">Check In</Text>
+                <Ionicons name="checkmark-circle" size={24} color="#10B981" />
+                <Text className="text-xs text-primary-800 font-medium mt-1">Check In</Text>
               </Pressable>
               
               <Pressable className="items-center" onPress={shareLocation}>
-                <Ionicons name="share" size={24} color="#007AFF" />
-                <Text className="text-xs text-black font-medium mt-1">Share Location</Text>
+                <Ionicons name="share" size={24} color="#B45309" />
+                <Text className="text-xs text-primary-800 font-medium mt-1">Share Location</Text>
               </Pressable>
               
               <Pressable className="items-center" onPress={toggleHistory}>
-                <Ionicons name="list" size={24} color="#8E8E93" />
-                <Text className="text-xs text-black font-medium mt-1">History</Text>
+                <Ionicons name="list" size={24} color="#A8A29E" />
+                <Text className="text-xs text-primary-800 font-medium mt-1">History</Text>
               </Pressable>
             </View>
           </>
         ) : (
           <CheckpointList 
-            visitedCheckpoints={visitedCheckpoints}
+            visitedCheckpoints={visitedCheckpoints || []}
             onClose={() => setShowHistory(false)}
           />
         )}

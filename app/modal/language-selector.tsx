@@ -63,7 +63,7 @@ const LanguageSelectorModal: React.FC = () => {
 
   const LanguageItem = ({ language }: { language: Language }) => (
     <Pressable
-      className={`p-4 border-b border-gray-100 ${selectedLanguage === language.code ? 'bg-primary/5' : ''}`}
+      className={`p-4 border-b border-primary-100 ${selectedLanguage === language.code ? 'bg-secondary-50' : ''}`}
       onPress={() => handleLanguageSelect(language.code)}
       disabled={isLoading}
     >
@@ -71,33 +71,35 @@ const LanguageSelectorModal: React.FC = () => {
         <View className="flex-row items-center flex-1">
           <Text className="text-2xl mr-3">{language.flag}</Text>
           <View>
-            <Text className={`text-base font-medium ${selectedLanguage === language.code ? 'text-primary' : 'text-black'}`}>
+            <Text className={`text-base font-medium ${selectedLanguage === language.code ? 'text-secondary-700' : 'text-primary-800'}`}>
               {language.name}
             </Text>
-            <Text className="text-sm text-gray-600">{language.nativeName}</Text>
+            <Text className="text-sm text-primary-600">{language.nativeName}</Text>
           </View>
         </View>
         
         {selectedLanguage === language.code && (
-          <Ionicons name="checkmark-circle" size={24} color="#007AFF" />
+          <Ionicons name="checkmark-circle" size={24} color="#B45309" />
         )}
       </View>
     </Pressable>
   );
 
   return (
-    <View className="flex-1 bg-gray-light">
+    <View className="flex-1 bg-primary-50">
       <Stack.Screen 
         options={{ 
           title: 'Select Language',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
         }} 
       />
 
       <View className="flex-1">
         {/* Header Info */}
-        <View className="bg-white p-4 border-b border-gray-200">
-          <Text className="text-sm text-gray-600 text-center">
+        <View className="bg-white p-4 border-b border-primary-200">
+          <Text className="text-sm text-primary-600 text-center">
             Choose your preferred language for the app interface
           </Text>
         </View>
@@ -110,10 +112,10 @@ const LanguageSelectorModal: React.FC = () => {
         </ScrollView>
 
         {/* Footer Info */}
-        <View className="bg-gray-50 p-4 border-t border-gray-200">
+        <View className="bg-primary-50 p-4 border-t border-primary-200">
           <View className="flex-row items-center justify-center">
-            <Ionicons name="information-circle-outline" size={16} color="#8E8E93" />
-            <Text className="text-xs text-gray-500 ml-2 text-center">
+            <Ionicons name="information-circle-outline" size={16} color="#A8A29E" />
+            <Text className="text-xs text-primary-500 ml-2 text-center">
               Emergency features remain available in all languages
             </Text>
           </View>
@@ -123,8 +125,8 @@ const LanguageSelectorModal: React.FC = () => {
       {/* Loading Overlay */}
       {isLoading && (
         <View className="absolute inset-0 bg-black/20 justify-center items-center">
-          <View className="bg-white p-6 rounded-xl items-center">
-            <Text className="text-base font-medium">Updating language...</Text>
+          <View className="bg-white p-6 rounded-xl items-center shadow-lg">
+            <Text className="text-base font-medium text-primary-800">Updating language...</Text>
           </View>
         </View>
       )}

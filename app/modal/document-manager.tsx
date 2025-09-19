@@ -32,24 +32,19 @@ const DocumentManagerModal: React.FC = () => {
       uploadedAt: '2024-01-15',
       verified: true,
     },
-    // Add more mock documents
   ]);
 
   const getDocumentIcon = (type: Document['type']) => {
     switch (type) {
-      case 'aadhaar':
-        return 'card';
-      case 'passport':
-        return 'airplane';
-      case 'license':
-        return 'car';
-      default:
-        return 'document';
+      case 'aadhaar': return 'card';
+      case 'passport': return 'airplane';
+      case 'license': return 'car';
+      default: return 'document';
     }
   };
 
   const getStatusColor = (verified: boolean) => {
-    return verified ? '#34C759' : '#FF9500';
+    return verified ? '#10B981' : '#F59E0B';
   };
 
   const handleUploadDocument = useCallback(async () => {
@@ -60,7 +55,6 @@ const DocumentManagerModal: React.FC = () => {
       });
 
       if (!result.canceled && result.assets[0]) {
-        // Handle document upload
         Alert.alert('Document Selected', 'Document upload functionality will be implemented');
       }
     } catch (error) {
@@ -90,48 +84,50 @@ const DocumentManagerModal: React.FC = () => {
   }, []);
 
   return (
-    <View className="flex-1 bg-gray-light">
+    <View className="flex-1 bg-primary-50">
       <Stack.Screen 
         options={{ 
           title: 'Document Manager',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
         }} 
       />
 
       <ScrollView className="flex-1 p-4">
         {/* Upload Section */}
-        <View className="bg-white rounded-xl p-4 mb-4">
-          <Text className="text-lg font-semibold text-black mb-3">Upload Documents</Text>
+        <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+          <Text className="text-lg font-semibold text-primary-800 mb-3">Upload Documents</Text>
           <Pressable
-            className="border-2 border-dashed border-primary rounded-xl p-6 items-center"
+            className="border-2 border-dashed border-secondary-400 rounded-xl p-6 items-center bg-secondary-50"
             onPress={handleUploadDocument}
           >
-            <Ionicons name="cloud-upload" size={32} color="#007AFF" />
-            <Text className="text-primary font-semibold mt-2">Upload New Document</Text>
-            <Text className="text-sm text-gray-600 text-center mt-1">
+            <Ionicons name="cloud-upload" size={32} color="#B45309" />
+            <Text className="text-secondary-700 font-semibold mt-2">Upload New Document</Text>
+            <Text className="text-sm text-primary-600 text-center mt-1">
               Supported: JPG, PNG, PDF
             </Text>
           </Pressable>
         </View>
 
         {/* Documents List */}
-        <View className="bg-white rounded-xl p-4">
-          <Text className="text-lg font-semibold text-black mb-4">Your Documents</Text>
+        <View className="bg-white rounded-xl p-4 shadow-sm">
+          <Text className="text-lg font-semibold text-primary-800 mb-4">Your Documents</Text>
           
           {documents.length > 0 ? (
             documents.map((document) => (
-              <View key={document.id} className="py-4 border-b border-gray-100 last:border-b-0">
+              <View key={document.id} className="py-4 border-b border-primary-100 last:border-b-0">
                 <View className="flex-row items-center">
-                  <View className="w-12 h-12 bg-primary/10 rounded-lg justify-center items-center mr-3">
+                  <View className="w-12 h-12 bg-secondary-100 rounded-lg justify-center items-center mr-3">
                     <Ionicons 
                       name={getDocumentIcon(document.type)} 
                       size={24} 
-                      color="#007AFF" 
+                      color="#B45309" 
                     />
                   </View>
                   
                   <View className="flex-1">
-                    <Text className="text-base font-medium text-black">{document.name}</Text>
+                    <Text className="text-base font-medium text-primary-800">{document.name}</Text>
                     <View className="flex-row items-center mt-1">
                       <View 
                         className="px-2 py-1 rounded"
@@ -144,7 +140,7 @@ const DocumentManagerModal: React.FC = () => {
                           {document.verified ? 'VERIFIED' : 'PENDING'}
                         </Text>
                       </View>
-                      <Text className="text-xs text-gray-500 ml-2">
+                      <Text className="text-xs text-primary-500 ml-2">
                         Uploaded {new Date(document.uploadedAt).toLocaleDateString()}
                       </Text>
                     </View>
@@ -156,7 +152,7 @@ const DocumentManagerModal: React.FC = () => {
                         className="p-2"
                         onPress={() => handleVerifyDocument(document.id)}
                       >
-                        <Ionicons name="shield-checkmark" size={20} color="#34C759" />
+                        <Ionicons name="shield-checkmark" size={20} color="#10B981" />
                       </Pressable>
                     )}
                     
@@ -164,7 +160,7 @@ const DocumentManagerModal: React.FC = () => {
                       className="p-2"
                       onPress={() => handleDeleteDocument(document.id)}
                     >
-                      <Ionicons name="trash" size={20} color="#FF3B30" />
+                      <Ionicons name="trash" size={20} color="#EF4444" />
                     </Pressable>
                   </View>
                 </View>
@@ -172,9 +168,9 @@ const DocumentManagerModal: React.FC = () => {
             ))
           ) : (
             <View className="py-8 items-center">
-              <Ionicons name="document-outline" size={48} color="#8E8E93" />
-              <Text className="text-gray-500 mt-4">No documents uploaded</Text>
-              <Text className="text-sm text-gray-400 text-center mt-1">
+              <Ionicons name="document-outline" size={48} color="#A8A29E" />
+              <Text className="text-primary-500 mt-4">No documents uploaded</Text>
+              <Text className="text-sm text-primary-400 text-center mt-1">
                 Upload your identity documents for verification
               </Text>
             </View>
@@ -182,12 +178,12 @@ const DocumentManagerModal: React.FC = () => {
         </View>
 
         {/* Help Section */}
-        <View className="bg-blue-50 rounded-xl p-4 mt-4">
+        <View className="bg-secondary-50 border border-secondary-200 rounded-xl p-4 mt-4">
           <View className="flex-row items-center mb-2">
-            <Ionicons name="information-circle" size={20} color="#007AFF" />
-            <Text className="text-primary font-semibold ml-2">Document Guidelines</Text>
+            <Ionicons name="information-circle" size={20} color="#B45309" />
+            <Text className="text-secondary-700 font-semibold ml-2">Document Guidelines</Text>
           </View>
-          <Text className="text-sm text-gray-700 leading-5">
+          <Text className="text-sm text-primary-700 leading-5">
             • Ensure documents are clear and readable{'\n'}
             • Upload original documents, not photocopies{'\n'}
             • All personal information should be visible{'\n'}

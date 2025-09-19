@@ -43,18 +43,18 @@ const QRScannerModal: React.FC = () => {
 
   if (hasPermission === null) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text>Requesting camera permission...</Text>
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <Text className="text-primary-600">Requesting camera permission...</Text>
       </View>
     );
   }
 
   if (hasPermission === false) {
     return (
-      <View className="flex-1 justify-center items-center p-4">
-        <Ionicons name="camera-outline" size={64} color="#8E8E93" />
-        <Text className="text-xl font-semibold text-black mt-4 mb-2">Camera Access Required</Text>
-        <Text className="text-base text-gray-600 text-center">
+      <View className="flex-1 justify-center items-center p-4 bg-primary-50">
+        <Ionicons name="camera-outline" size={64} color="#A8A29E" />
+        <Text className="text-xl font-semibold text-primary-800 mt-4 mb-2">Camera Access Required</Text>
+        <Text className="text-base text-primary-600 text-center">
           Please allow camera access to scan QR codes
         </Text>
       </View>
@@ -66,7 +66,9 @@ const QRScannerModal: React.FC = () => {
       <Stack.Screen 
         options={{ 
           title: 'Scan QR Code',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: 'transparent' },
+          headerTintColor: 'white'
         }} 
       />
 

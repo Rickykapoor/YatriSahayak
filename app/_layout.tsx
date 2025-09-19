@@ -1,61 +1,67 @@
+// File: app/_layout.tsx
+
 import '../global.css';
 import { useEffect } from 'react';
-import { Stack, router, useSegments } from 'expo-router';
+import { Slot, SplashScreen, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text } from 'react-native';
-
-// Import all providers
+import { View, Text, ActivityIndicator } from 'react-native';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { TouristProvider } from '@/context/TouristContext';
 import { SafetyProvider } from '@/context/SafetyContext';
 
-// Navigation component that uses auth context
-function RootLayoutNav() {
-  const segments = useSegments();
+// Keep the splash screen visible until auth logic is complete
+SplashScreen.preventAutoHideAsync();
+
+function AuthLayer() {
   const { isAuthenticated, isLoading } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (isLoading) return;
+  useEffect(() => {
+    // Wait until the auth state is known
+    if (isLoading) {
+      return;
+    }
 
-  //   const inAuthGroup = segments[0] === '(auth)';
+    SplashScreen.hideAsync();
 
-  //   if (!isAuthenticated && !inAuthGroup) {
-  //     router.replace('/(auth)/welcome');
-  //   } else if (isAuthenticated && inAuthGroup) {
-  //     router.replace('/(tabs)');
-  //   }
-  // }, [isAuthenticated, isLoading, segments]);
+    const inAuthGroup = segments[0] === '(auth)';
 
-  // if (isLoading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-  //       <Text>Loading...</Text>
-  //     </View>
-  //   );
-  // }
+    // Redirect based on auth state
+    if (!isAuthenticated && !inAuthGroup) {
+      router.replace('/(auth)/language');
+     } 
+    //else if (isAuthenticated && inAuthGroup) {
+    //   router.replace('/(app)/home');
+    // }
+  }, [isAuthenticated, isLoading, segments]);
 
+  // Show a loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ea580c' }}>
+        <ActivityIndicator size="large" color="white" />
+        <Text style={{ color: 'white', marginTop: 10 }}>Loading...</Text>
+      </View>
+    );
+  }
+
+  // Once loaded, the <Slot> will render the appropriate child layout
+  // (e.g., app/(auth)/_layout.tsx or app/(app)/_layout.tsx)
   return (
     <>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ 
-          presentation: 'modal',
-          headerShown: true 
-        }} />
-      </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style="light" backgroundColor="#ea580c" />
+      <Slot />
     </>
   );
 }
 
-// CRITICAL: Proper provider nesting order
 export default function RootLayout() {
   return (
     <AuthProvider>
       <SafetyProvider>
         <TouristProvider>
-          <RootLayoutNav />
+          <AuthLayer />
         </TouristProvider>
       </SafetyProvider>
     </AuthProvider>

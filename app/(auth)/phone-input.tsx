@@ -1,20 +1,12 @@
-// app/(auth)/phone-input.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StatusBar, Image, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Country, AuthState } from '../../types/auth';
-import { sendOTP,validatePhoneNumber  } from '@/services/authService';
-const POPULAR_COUNTRIES: Country[] = [
-  { name: 'India', code: 'IN', dialCode: '+91', flag: '🇮🇳' },
-  { name: 'United States', code: 'US', dialCode: '+1', flag: '🇺🇸' },
-  { name: 'United Kingdom', code: 'GB', dialCode: '+44', flag: '🇬🇧' },
-  { name: 'Australia', code: 'AU', dialCode: '+61', flag: '🇦🇺' },
-  { name: 'Canada', code: 'CA', dialCode: '+1', flag: '🇨🇦' },
-];
+import { AuthState } from '@/types/auth';
+import { sendOTP, validatePhoneNumber } from '@/services/authService';
 
-export default function PhoneInputScreen() {
+export default function PhoneInput() {
   const router = useRouter();
   const [authState, setAuthState] = useState<AuthState>({
     phoneNumber: '',
@@ -24,143 +16,149 @@ export default function PhoneInputScreen() {
     error: null,
     otpSent: false,
   });
-  const [selectedCountry, setSelectedCountry] = useState<Country>(POPULAR_COUNTRIES[0]);
-  const [showCountryPicker, setShowCountryPicker] = useState(false);
-
-
 
   const SendOTP = async () => {
-    if (!validatePhoneNumber(authState.phoneNumber)) {
-      setAuthState(prev => ({ 
-        ...prev, 
-        error: 'Please enter a valid phone number' 
-      }));
-      return;
-    }
-
-    setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      const response = await sendOTP(authState.phoneNumber);
-      if (!response.success) {
-        throw new Error(response.message);
+    router.push({
+      pathname: '/(auth)/otp-verification',
+      params: {
+        phoneNumber: authState.phoneNumber,
       }
-      
-      setAuthState(prev => ({ ...prev, otpSent: true, isLoading: false }));
-      
-      router.push({
-        pathname: '/(auth)/otp-verification',
-        params: { 
-          phoneNumber: `${selectedCountry.dialCode}${authState.phoneNumber}`,
-          countryCode: selectedCountry.dialCode 
-        }
-      });
-    } catch (error) {
-      setAuthState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: 'Failed to send OTP. Please try again.' 
-      }));
+    });
+  };
+
+  const handlePhoneChange = (text: string) => {
+    const numericText = text.replace(/[^0-9]/g, '');
+    if (numericText.length <= 10) {
+      setAuthState(prev => ({ ...prev, phoneNumber: numericText, error: null }));
     }
   };
 
+  const isValid = authState.phoneNumber.length === 10 && validatePhoneNumber(authState.phoneNumber);
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-6 py-4">
-        <TouchableOpacity 
-          onPress={() => router.back()}
-          className="w-10 h-10 items-center justify-center rounded-full bg-gray-100"
-        >
-          <Ionicons name="arrow-back" size={20} color="#374151" />
-        </TouchableOpacity>
-        <Text className="text-lg font-semibold text-gray-900">Login</Text>
-        <View className="w-10" />
-      </View>
-
-      {/* Content */}
-      <View className="flex-1 px-6 py-8">
-        <View className="mb-8">
-          <Text className="text-2xl font-bold text-gray-900 mb-2">
-            Enter your phone number
-          </Text>
-          <Text className="text-gray-600 text-base leading-6">
-            We'll send you a verification code to confirm your identity
-          </Text>
-        </View>
-
-        {/* Country Selector */}
-        <TouchableOpacity 
-          className="flex-row items-center p-4 border border-gray-300 rounded-xl mb-4"
-          onPress={() => setShowCountryPicker(true)}
-        >
-          <Text className="text-2xl mr-3">{selectedCountry.flag}</Text>
-          <Text className="text-base font-medium text-gray-900 mr-2">
-            {selectedCountry.name}
-          </Text>
-          <Text className="text-base text-gray-600 mr-auto">
-            {selectedCountry.dialCode}
-          </Text>
-          <Ionicons name="chevron-down" size={20} color="#6B7280" />
-        </TouchableOpacity>
-
-        {/* Phone Input */}
-        <View className="mb-6">
-          <View className="flex-row items-center border border-gray-300 rounded-xl overflow-hidden">
-            <View className="bg-gray-50 px-4 py-4 border-r border-gray-300">
-              <Text className="text-base font-medium text-gray-700">
-                {selectedCountry.dialCode}
-              </Text>
-            </View>
-            <TextInput
-              className="flex-1 px-4 py-4 text-base text-gray-900"
-              placeholder="Enter phone number"
-              value={authState.phoneNumber}
-              onChangeText={(text) => {
-                setAuthState(prev => ({ 
-                  ...prev, 
-                  phoneNumber: text.replace(/[^0-9]/g, ''),
-                  error: null 
-                }));
-              }}
-              keyboardType="phone-pad"
-              maxLength={10}
-              autoFocus
+    <SafeAreaView className="flex-1 bg-primary-100">
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F5F4" />
+      
+      {/* Header with App Branding */}
+      <View className="bg-primary-100 px-6 pt-5 pb-8">
+        <View className="items-center mb-6">
+          {/* App Logo */}
+          <View className="w-72 h-20 rounded-3xl justify-center items-center mb-3">
+            <Image 
+              source={require('@/assets/images/Logo_text.png')} 
+              style={{ width: 270, height: 180 }} 
+              resizeMode="contain"
             />
           </View>
-          {authState.error && (
-            <Text className="text-red-500 text-sm mt-2 px-1">
-              {authState.error}
-            </Text>
-          )}
+          
+          <Text className="text-primary-600 text-sm text-center font-medium">
+            Digital Tourist Identity & Security Platform
+          </Text>
         </View>
 
-        {/* Send OTP Button */}
-        <TouchableOpacity
-          className={`py-4 rounded-xl ${
-            authState.phoneNumber.length === 10 && !authState.isLoading
-              ? 'bg-blue-600' 
-              : 'bg-gray-300'
-          }`}
-          onPress={SendOTP}
-          disabled={authState.phoneNumber.length !== 10 || authState.isLoading}
-        >
-          <Text className={`text-center font-semibold text-base ${
-            authState.phoneNumber.length === 10 && !authState.isLoading
-              ? 'text-white' 
-              : 'text-gray-500'
-          }`}>
-            {authState.isLoading ? 'Sending OTP...' : 'Send OTP'}
+        <View className="items-center">
+          <Text className="text-primary-800 text-2xl font-bold mb-2 tracking-tight">
+            Enter Phone Number
           </Text>
-        </TouchableOpacity>
+          <Text className="text-primary-600 text-base text-center leading-6 font-medium">
+            We'll send a verification code to your Indian mobile number
+          </Text>
+        </View>
+      </View>
 
-        {/* Terms */}
-        <Text className="text-center text-sm text-gray-500 mt-6 leading-5">
-          By continuing, you agree to our{' '}
-          <Text className="text-blue-600 underline">Terms of Service</Text>
-          {' '}and{' '}
-          <Text className="text-blue-600 underline">Privacy Policy</Text>
-        </Text>
+      {/* Main Content Container */}
+      <View className="flex-1 bg-primary-50 rounded-t-3xl shadow-sm">
+        <View className="pt-3 pb-2 items-center">
+          <View className="w-10 h-1 rounded-full bg-primary-300" />
+        </View>
+
+        <ScrollView contentContainerStyle={{ padding: 24 }}>
+          {/* Country code display */}
+          <View className="flex-row items-center bg-secondary-50 rounded-xl border border-secondary-200 p-4 mb-6 shadow-sm">
+            <Text className="text-2xl mr-3">🇮🇳</Text>
+            <Text className="text-base font-semibold text-primary-800 mr-2">India</Text>
+            <Text className="text-base text-secondary-700 font-bold">+91</Text>
+          </View>
+
+          {/* Phone input */}
+          <View className="mb-6">
+            <Text className="text-primary-700 font-semibold mb-2">Phone Number</Text>
+            <View className="flex-row border border-primary-300 rounded-xl overflow-hidden bg-white shadow-sm">
+              <View className="bg-secondary-50 px-4 py-4 border-r border-primary-300">
+                <Text className="text-secondary-700 font-bold">+91</Text>
+              </View>
+              <TextInput
+                className="flex-1 px-4 py-4 text-base text-primary-800"
+                placeholder="Enter 10-digit mobile number"
+                placeholderTextColor="#A8A29E"
+                keyboardType="phone-pad"
+                maxLength={10}
+                value={authState.phoneNumber}
+                onChangeText={handlePhoneChange}
+                autoFocus
+                autoComplete="tel"
+                textContentType="telephoneNumber"
+              />
+              {isValid && (
+                <View className="justify-center pr-3">
+                  <Ionicons name="checkmark-circle" size={20} color="#B45309" />
+                </View>
+              )}
+            </View>
+            {authState.error && (
+              <Text className="text-danger mt-2 px-1 text-sm">{authState.error}</Text>
+            )}
+          </View>
+
+          {/* Preview */}
+          {authState.phoneNumber.length > 0 && (
+            <View className="bg-secondary-50 border border-secondary-200 p-4 rounded-xl mb-6 shadow-sm">
+              <Text className="text-secondary-800 font-semibold text-sm mb-1">OTP will be sent to</Text>
+              <Text className="text-secondary-700 text-base font-bold">+91 {authState.phoneNumber}</Text>
+            </View>
+          )}
+
+          {/* Info box */}
+          <View className="bg-white border border-primary-200 rounded-xl p-4 mb-6 shadow-sm">
+            <View className="flex-row items-center mb-2">
+              <Ionicons name="shield-checkmark" size={18} color="#B45309" />
+              <Text className="ml-2 font-semibold text-primary-700">Secure Verification</Text>
+            </View>
+            <Text className="text-primary-600 text-sm leading-5">
+              Your phone number is used only for secure login and emergency services. We never share your personal information.
+            </Text>
+          </View>
+        </ScrollView>
+
+        {/* Continue button + terms */}
+        <View className="p-6 bg-white border-t border-primary-200">
+          <TouchableOpacity
+            disabled={!isValid || authState.isLoading}
+            onPress={SendOTP}
+            className={`rounded-xl py-4 items-center shadow-lg ${
+              isValid && !authState.isLoading ? 'bg-secondary-700' : 'bg-primary-300'
+            }`}
+            style={{
+              shadowColor: isValid && !authState.isLoading ? '#B45309' : 'transparent',
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: isValid && !authState.isLoading ? 0.2 : 0,
+              shadowRadius: 8,
+              elevation: isValid && !authState.isLoading ? 5 : 0,
+            }}
+          >
+            <Text className={`text-lg font-bold ${
+              isValid && !authState.isLoading ? 'text-white' : 'text-primary-500'
+            }`}>
+              {authState.isLoading ? 'Sending OTP...' : 'Send OTP'}
+            </Text>
+          </TouchableOpacity>
+          
+          <Text className="mt-4 text-center text-xs text-primary-500 leading-4">
+            By continuing, you agree to our{' '}
+            <Text className="underline text-secondary-700 font-medium">Terms of Service</Text> and{' '}
+            <Text className="underline text-secondary-700 font-medium">Privacy Policy</Text>.
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );

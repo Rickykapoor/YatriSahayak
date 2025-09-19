@@ -11,43 +11,6 @@ export const validatePhoneNumber = (phoneNumber: string): boolean => {
   const phoneRegex = /^[6-9]\d{9}$/;
   return phoneRegex.test(phoneNumber);
 };
-
-export const sendOTP = async (phoneNumber: string): Promise<SendOTPResponse> => {
-  try {
-    phoneNumber = `+91${phoneNumber}`; // Remove spaces
-    // Use Supabase Auth's built-in phone authentication
-    const { data, error } = await supabase.auth.signInWithOtp({
-      phone: phoneNumber,
-      options: {
-        // Configure custom SMS provider (Twilio via Edge Function)
-        channel: 'sms',
-      }
-    });
-
-    if (error) {
-      console.error('Supabase Auth OTP Error:', error);
-      return {
-        success: false,
-        message: error.message || 'Failed to send OTP',
-      };
-    }
-
-    return {
-      success: true,
-      message: 'OTP sent successfully',
-      // Supabase handles OTP ID internally
-    };
-    
-  } catch (error) {
-    console.error('Send OTP Error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP';
-    return {
-      success: false,
-      message: errorMessage,
-    };
-  }
-};
-
 export const verifyOTP = async (
   phoneNumber: string, 
   otp: string
@@ -78,9 +41,18 @@ export const verifyOTP = async (
     // Map Supabase user to our User type
     const user: User = {
       id: data.user.id,
-      phoneNumber: data.user.phone || phoneNumber,
-      createdAt: data.user.created_at,
-      isVerified: !!data.user.phone_confirmed_at,
+      phone: data.user.phone || phoneNumber,
+      name: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      joinDate: '',
+      digitalID: '',
+      verified: false,
+      averageSafetyScore: 0,
+      checkinsCount: 0,
+      recentTrips: [],
+      settings: undefined
     };
 
     return {
@@ -99,9 +71,54 @@ export const verifyOTP = async (
     };
   }
 };
+export const sendOTP = async (phoneNumber: string): Promise<SendOTPResponse> => {
+  try {
+    // Convert phoneNumber to E.164 format (no spaces, no dashes)
+    // Assumes phoneNumber is entered without country code
+    let formattedPhone = phoneNumber.trim();
+    
+    // Remove any spaces, dashes, or special characters from input
+    formattedPhone = formattedPhone.replace(/\D/g, "");
+
+    // Add country code +91 (for India) at the beginning
+    formattedPhone = `+91${formattedPhone}`;
+
+    console.log('Sending OTP to:', formattedPhone);
+    
+    const { data, error } = await supabase.auth.signInWithOtp({
+      phone: formattedPhone,
+      options: {
+        channel: 'sms',
+      }
+    });
+
+    if (error) {
+      console.error('Supabase Auth OTP Error:', error);
+      return {
+        success: false,
+        message: error.message || 'Failed to send OTP',
+      };
+    }
+
+    return {
+      success: true,
+      message: 'OTP sent successfully',
+    };
+    
+  } catch (error) {
+    console.error('Send OTP Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP';
+    return {
+      success: false,
+      message: errorMessage,
+    };
+  }
+};
 
 export const resendOTP = async (phoneNumber: string): Promise<AuthResponse> => {
   try {
+    console.log('Resending OTP to:', phoneNumber);
+    // Send raw number to sendOTP - it will handle formatting
     const result = await sendOTP(phoneNumber);
     return {
       success: result.success,
@@ -127,7 +144,6 @@ export const isAuthenticated = async (): Promise<boolean> => {
     return false;
   }
 };
-
 // Get current user from Supabase Auth
 export const getCurrentUser = async (): Promise<User | null> => {
   try {
@@ -138,14 +154,25 @@ export const getCurrentUser = async (): Promise<User | null> => {
     return {
       id: user.id,
       phone: user.phone || '',
-      
+      name: user.user_metadata?.name || '',
+      firstName: user.user_metadata?.firstName || '',
+      lastName: user.user_metadata?.lastName || '',
+      email: user.email || '',
+      joinDate: user.user_metadata?.joinDate || user.created_at || '',
+      digitalID: user.user_metadata?.digitalID || '',
+      verified: !!user.phone_confirmed_at,
+      averageSafetyScore: user.user_metadata?.averageSafetyScore || 0,
+      checkinsCount: user.user_metadata?.checkinsCount || 0,
+      recentTrips: user.user_metadata?.recentTrips || [],
+      settings: user.user_metadata?.settings || {},
+
+      // Add other required properties with default values if needed
     };
   } catch (error) {
     console.error('Get current user failed:', error);
     return null;
   }
 };
-
 // Logout user
 export const logout = async (): Promise<boolean> => {
   try {

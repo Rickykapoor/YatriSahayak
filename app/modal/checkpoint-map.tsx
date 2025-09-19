@@ -21,8 +21,8 @@ const CheckpointMapModal: React.FC = () => {
 
   if (!location) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text>Loading map...</Text>
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <Text className="text-primary-600 text-lg">Loading map...</Text>
       </View>
     );
   }
@@ -32,7 +32,9 @@ const CheckpointMapModal: React.FC = () => {
       <Stack.Screen 
         options={{ 
           title: 'Checkpoint Map',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
         }} 
       />
 
@@ -55,6 +57,7 @@ const CheckpointMapModal: React.FC = () => {
             title={checkpoint.name}
             description={checkpoint.description}
             onCalloutPress={() => handleCheckIn(checkpoint.id)}
+            pinColor="#B45309"
           />
         ))}
 
@@ -63,8 +66,8 @@ const CheckpointMapModal: React.FC = () => {
             key={zone.id}
             center={zone.center}
             radius={zone.radius}
-            fillColor={zone.type === 'danger' ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,0,0.2)'}
-            strokeColor={zone.type === 'danger' ? '#FF0000' : '#00FF00'}
+            fillColor={zone.type === 'danger' ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)'}
+            strokeColor={zone.type === 'danger' ? '#EF4444' : '#10B981'}
             strokeWidth={2}
           />
         ))}
@@ -73,17 +76,17 @@ const CheckpointMapModal: React.FC = () => {
       {/* Map Controls */}
       <View className="absolute top-4 right-4">
         <Pressable
-          className="bg-white w-12 h-12 rounded-full justify-center items-center shadow-md"
+          className="bg-white w-12 h-12 rounded-full justify-center items-center shadow-md border border-primary-200"
           onPress={toggleMapType}
         >
-          <Ionicons name="layers" size={24} color="#007AFF" />
+          <Ionicons name="layers" size={24} color="#B45309" />
         </Pressable>
       </View>
 
       {/* Bottom Panel */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white p-4 rounded-t-xl">
-        <Text className="text-lg font-semibold text-black mb-2">Nearby Checkpoints</Text>
-        <Text className="text-sm text-gray-600">
+      <View className="absolute bottom-0 left-0 right-0 bg-white p-4 rounded-t-xl border-t border-primary-200 shadow-lg">
+        <Text className="text-lg font-semibold text-primary-800 mb-2">Nearby Checkpoints</Text>
+        <Text className="text-sm text-primary-600">
           {checkpoints.length} checkpoints found in your area
         </Text>
       </View>

@@ -7,9 +7,9 @@ interface SafetyStatusIndicatorProps {
 
 const SafetyStatusIndicator: React.FC<SafetyStatusIndicatorProps> = ({ score }) => {
   const getIndicatorColor = (score: number): string => {
-    if (score >= 80) return '#34C759'; // Green
-    if (score >= 60) return '#FF9500'; // Orange
-    return '#FF3B30'; // Red
+    if (score >= 80) return '#10B981'; // Success green
+    if (score >= 60) return '#F59E0B'; // Warning amber
+    return '#EF4444'; // Danger red
   };
 
   const getIndicatorSize = (score: number): number => {

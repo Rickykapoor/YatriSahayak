@@ -28,7 +28,6 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
   const generateContextualTips = (): SafetyTip[] => {
     const tips: SafetyTip[] = [];
 
-    // Time-based tips
     if (timeOfDay >= 20 || timeOfDay <= 6) {
       tips.push({
         id: 'night-safety',
@@ -40,7 +39,6 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
       });
     }
 
-    // Location-based tips
     if (location?.type === 'danger') {
       tips.push({
         id: 'high-risk-area',
@@ -61,7 +59,6 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
       });
     }
 
-    // General safety tips
     tips.push(
       {
         id: 'emergency-contacts',
@@ -86,18 +83,16 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
         priority: 'high',
         category: 'general',
         icon: 'chatbubbles'
+      },
+      {
+        id: 'weather-awareness',
+        title: 'Weather Precautions',
+        description: 'Check weather conditions before heading out. Carry appropriate gear and avoid outdoor activities during severe weather.',
+        priority: 'low',
+        category: 'weather',
+        icon: 'cloud'
       }
     );
-
-    // Weather-based tip (mock)
-    tips.push({
-      id: 'weather-awareness',
-      title: 'Weather Precautions',
-      description: 'Check weather conditions before heading out. Carry appropriate gear and avoid outdoor activities during severe weather.',
-      priority: 'low',
-      category: 'weather',
-      icon: 'cloud'
-    });
 
     return tips.sort((a, b) => {
       const priorityOrder = { high: 3, medium: 2, low: 1 };
@@ -111,40 +106,40 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
     switch (priority) {
       case 'high': return 'border-danger';
       case 'medium': return 'border-warning';
-      case 'low': return 'border-gray-300';
+      case 'low': return 'border-primary-300';
     }
   };
 
   const getPriorityBg = (priority: SafetyTip['priority']): string => {
     switch (priority) {
-      case 'high': return 'bg-danger/5';
-      case 'medium': return 'bg-warning/5';
-      case 'low': return 'bg-gray-50';
+      case 'high': return 'bg-red-50';
+      case 'medium': return 'bg-yellow-50';
+      case 'low': return 'bg-primary-50';
     }
   };
 
   const getCategoryColor = (category: SafetyTip['category']): string => {
     switch (category) {
-      case 'location': return '#007AFF';
-      case 'time': return '#5856D6';
-      case 'weather': return '#34C759';
-      case 'personal': return '#FF9500';
-      default: return '#8E8E93';
+      case 'location': return '#B45309';
+      case 'time': return '#6B46C1';
+      case 'weather': return '#10B981';
+      case 'personal': return '#F59E0B';
+      default: return '#A8A29E';
     }
   };
 
   return (
     <View className="m-4">
-      <View className="bg-white rounded-xl overflow-hidden">
+      <View className="bg-white rounded-xl overflow-hidden shadow-sm border border-primary-200">
         {/* Header */}
-        <View className="p-4 bg-primary/5 border-b border-gray-100">
+        <View className="p-4 bg-secondary-50 border-b border-primary-100">
           <View className="flex-row items-center">
-            <View className="w-10 h-10 bg-primary/10 rounded-full justify-center items-center mr-3">
-              <Ionicons name="bulb" size={20} color="#007AFF" />
+            <View className="w-10 h-10 bg-secondary-100 rounded-full justify-center items-center mr-3">
+              <Ionicons name="bulb" size={20} color="#B45309" />
             </View>
             <View>
-              <Text className="text-lg font-semibold text-black">Safety Tips</Text>
-              <Text className="text-sm text-gray-600">
+              <Text className="text-lg font-semibold text-primary-800">Safety Tips</Text>
+              <Text className="text-sm text-primary-600">
                 Personalized for your current situation
               </Text>
             </View>
@@ -172,16 +167,16 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
                     
                     <View className="flex-1">
                       <View className="flex-row items-center">
-                        <Text className="text-base font-semibold text-black mr-2">
+                        <Text className="text-base font-semibold text-primary-800 mr-2">
                           {tip.title}
                         </Text>
                         <View className={`px-2 py-1 rounded-full ${
-                          tip.priority === 'high' ? 'bg-danger/10' :
-                          tip.priority === 'medium' ? 'bg-warning/10' : 'bg-gray-100'
+                          tip.priority === 'high' ? 'bg-red-100' :
+                          tip.priority === 'medium' ? 'bg-yellow-100' : 'bg-primary-100'
                         }`}>
                           <Text className={`text-xs font-bold ${
                             tip.priority === 'high' ? 'text-danger' :
-                            tip.priority === 'medium' ? 'text-warning' : 'text-gray-600'
+                            tip.priority === 'medium' ? 'text-warning' : 'text-primary-600'
                           }`}>
                             {tip.priority.toUpperCase()}
                           </Text>
@@ -189,7 +184,7 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
                       </View>
                       
                       {expandedTip !== tip.id && (
-                        <Text className="text-sm text-gray-600 mt-1" numberOfLines={1}>
+                        <Text className="text-sm text-primary-600 mt-1" numberOfLines={1}>
                           {tip.description}
                         </Text>
                       )}
@@ -199,23 +194,23 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
                   <Ionicons 
                     name={expandedTip === tip.id ? "chevron-up" : "chevron-down"} 
                     size={16} 
-                    color="#8E8E93" 
+                    color="#A8A29E" 
                   />
                 </View>
 
                 {/* Expanded Content */}
                 {expandedTip === tip.id && (
                   <View className="mt-3 pl-11">
-                    <Text className="text-sm text-gray-700 leading-5">
+                    <Text className="text-sm text-primary-700 leading-5">
                       {tip.description}
                     </Text>
                     
                     {tip.priority === 'high' && (
-                      <View className="mt-3 p-3 bg-danger/5 rounded-lg">
+                      <View className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                         <Text className="text-xs font-semibold text-danger mb-1">
                           ⚠️ IMMEDIATE ACTION RECOMMENDED
                         </Text>
-                        <Text className="text-xs text-gray-700">
+                        <Text className="text-xs text-primary-700">
                           This is a high-priority safety concern that requires your immediate attention.
                         </Text>
                       </View>
@@ -225,15 +220,15 @@ const SafetyTipsCard: React.FC<SafetyTipsCardProps> = ({
               </Pressable>
               
               {index < tips.length - 1 && (
-                <View className="h-px bg-gray-100 mx-4" />
+                <View className="h-px bg-primary-100 mx-4" />
               )}
             </View>
           ))}
         </ScrollView>
 
         {/* Footer */}
-        <View className="p-4 bg-gray-50 border-t border-gray-100">
-          <Text className="text-xs text-gray-600 text-center">
+        <View className="p-4 bg-primary-50 border-t border-primary-100">
+          <Text className="text-xs text-primary-600 text-center">
             💡 Tips are updated based on your location, time, and travel profile
           </Text>
         </View>

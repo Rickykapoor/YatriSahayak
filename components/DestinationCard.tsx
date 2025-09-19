@@ -17,11 +17,11 @@ const DestinationCard: React.FC<DestinationCardProps> = ({ destination, onSelect
 
   return (
     <Pressable
-      className="w-48 h-32 rounded-xl overflow-hidden mr-3"
+      className="w-48 h-32 rounded-xl overflow-hidden mr-3 shadow-sm"
       onPress={() => onSelect(destination)}
     >
       <ImageBackground
-        source={{ uri: `https://via.placeholder.com/200x120?text=${destination.name}` }}
+        source={{ uri: `https://via.placeholder.com/200x120/B45309/FFFFFF?text=${destination.name}` }}
         className="flex-1 justify-end"
       >
         <View className="bg-black/50 p-3">

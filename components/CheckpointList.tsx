@@ -57,20 +57,20 @@ const CheckpointList: React.FC<CheckpointListProps> = ({ visitedCheckpoints, onC
 
   const getCheckpointColor = (type: CheckpointHistoryItem['type']): string => {
     switch (type) {
-      case 'police': return '#5856D6';
-      case 'hotel': return '#007AFF';
-      case 'attraction': return '#34C759';
-      case 'transport': return '#FF9500';
-      default: return '#8E8E93';
+      case 'police': return '#6B46C1';
+      case 'hotel': return '#B45309';
+      case 'attraction': return '#10B981';
+      case 'transport': return '#F59E0B';
+      default: return '#A8A29E';
     }
   };
 
   const getStatusColor = (status: CheckpointHistoryItem['verificationStatus']): string => {
     switch (status) {
-      case 'verified': return '#34C759';
-      case 'pending': return '#FF9500';
-      case 'failed': return '#FF3B30';
-      default: return '#8E8E93';
+      case 'verified': return '#10B981';
+      case 'pending': return '#F59E0B';
+      case 'failed': return '#EF4444';
+      default: return '#A8A29E';
     }
   };
 
@@ -100,34 +100,34 @@ const CheckpointList: React.FC<CheckpointListProps> = ({ visitedCheckpoints, onC
   };
 
   return (
-    <View className="flex-1 bg-gray-light">
+    <View className="flex-1 bg-primary-50">
       {/* Header */}
-      <View className="bg-white p-4 flex-row justify-between items-center border-b border-gray-200">
-        <Text className="text-lg font-semibold text-black">Checkpoint History</Text>
+      <View className="bg-white p-4 flex-row justify-between items-center border-b border-primary-200">
+        <Text className="text-lg font-semibold text-primary-800">Checkpoint History</Text>
         <Pressable onPress={onClose} className="p-1">
-          <Ionicons name="close" size={24} color="#8E8E93" />
+          <Ionicons name="close" size={24} color="#A8A29E" />
         </Pressable>
       </View>
 
       {/* Statistics */}
-      <View className="bg-white mx-4 mt-4 p-4 rounded-xl">
-        <Text className="text-base font-semibold text-black mb-3">Today's Activity</Text>
+      <View className="bg-white mx-4 mt-4 p-4 rounded-xl shadow-sm">
+        <Text className="text-base font-semibold text-primary-800 mb-3">Today's Activity</Text>
         <View className="flex-row justify-around">
           <View className="items-center">
-            <Text className="text-xl font-bold text-primary">{checkpointHistory.length}</Text>
-            <Text className="text-sm text-gray-600">Total</Text>
+            <Text className="text-xl font-bold text-secondary-700">{checkpointHistory.length}</Text>
+            <Text className="text-sm text-primary-600">Total</Text>
           </View>
           <View className="items-center">
             <Text className="text-xl font-bold text-success">
               {checkpointHistory.filter(c => c.verificationStatus === 'verified').length}
             </Text>
-            <Text className="text-sm text-gray-600">Verified</Text>
+            <Text className="text-sm text-primary-600">Verified</Text>
           </View>
           <View className="items-center">
             <Text className="text-xl font-bold text-warning">
               {checkpointHistory.filter(c => c.verificationStatus === 'pending').length}
             </Text>
-            <Text className="text-sm text-gray-600">Pending</Text>
+            <Text className="text-sm text-primary-600">Pending</Text>
           </View>
         </View>
       </View>
@@ -136,7 +136,7 @@ const CheckpointList: React.FC<CheckpointListProps> = ({ visitedCheckpoints, onC
       <ScrollView className="flex-1 p-4">
         {checkpointHistory.length > 0 ? (
           checkpointHistory.map((checkpoint, index) => (
-            <View key={checkpoint.id} className="bg-white rounded-xl mb-3 p-4">
+            <View key={checkpoint.id} className="bg-white rounded-xl mb-3 p-4 shadow-sm">
               <View className="flex-row items-center">
                 {/* Icon */}
                 <View 
@@ -152,13 +152,13 @@ const CheckpointList: React.FC<CheckpointListProps> = ({ visitedCheckpoints, onC
 
                 {/* Details */}
                 <View className="flex-1">
-                  <Text className="text-base font-semibold text-black mb-1">
+                  <Text className="text-base font-semibold text-primary-800 mb-1">
                     {checkpoint.name}
                   </Text>
-                  <Text className="text-sm text-gray-600 mb-1">
+                  <Text className="text-sm text-primary-600 mb-1">
                     {checkpoint.location}
                   </Text>
-                  <Text className="text-xs text-gray-500">
+                  <Text className="text-xs text-primary-500">
                     {formatTime(checkpoint.visitedAt)}
                   </Text>
                 </View>
@@ -178,30 +178,30 @@ const CheckpointList: React.FC<CheckpointListProps> = ({ visitedCheckpoints, onC
                   </View>
                   
                   {checkpoint.verificationStatus === 'verified' && (
-                    <Ionicons name="checkmark-circle" size={16} color="#34C759" />
+                    <Ionicons name="checkmark-circle" size={16} color="#10B981" />
                   )}
                   
                   {checkpoint.verificationStatus === 'pending' && (
-                    <Ionicons name="time" size={16} color="#FF9500" />
+                    <Ionicons name="time" size={16} color="#F59E0B" />
                   )}
                   
                   {checkpoint.verificationStatus === 'failed' && (
-                    <Ionicons name="close-circle" size={16} color="#FF3B30" />
+                    <Ionicons name="close-circle" size={16} color="#EF4444" />
                   )}
                 </View>
               </View>
 
               {/* Timeline Connector */}
               {index < checkpointHistory.length - 1 && (
-                <View className="absolute left-9 top-16 w-0.5 h-6 bg-gray-200" />
+                <View className="absolute left-9 top-16 w-0.5 h-6 bg-primary-200" />
               )}
             </View>
           ))
         ) : (
-          <View className="bg-white rounded-xl p-8 items-center">
-            <Ionicons name="location-outline" size={48} color="#8E8E93" />
-            <Text className="text-gray-500 text-center mt-4 mb-2">No checkpoints yet</Text>
-            <Text className="text-gray-400 text-sm text-center">
+          <View className="bg-white rounded-xl p-8 items-center shadow-sm">
+            <Ionicons name="location-outline" size={48} color="#A8A29E" />
+            <Text className="text-primary-500 text-center mt-4 mb-2">No checkpoints yet</Text>
+            <Text className="text-primary-400 text-sm text-center">
               Your checkpoint history will appear here as you travel
             </Text>
           </View>

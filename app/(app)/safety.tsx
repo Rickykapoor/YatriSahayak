@@ -33,7 +33,7 @@ const SafetyActionCard: React.FC<SafetyActionProps> = ({
   onPress,
 }) => (
   <Pressable 
-    className="flex-1 min-w-[45%] bg-white p-4 rounded-xl items-center"
+    className="flex-1 min-w-[45%] bg-white p-4 rounded-xl items-center shadow-sm"
     onPress={onPress}
   >
     <View 
@@ -42,8 +42,8 @@ const SafetyActionCard: React.FC<SafetyActionProps> = ({
     >
       <Ionicons name={icon} size={24} color="white" />
     </View>
-    <Text className="text-base font-semibold text-black mb-0.5">{title}</Text>
-    <Text className="text-xs text-gray-500 text-center">{subtitle}</Text>
+    <Text className="text-base font-semibold text-primary-800 mb-0.5">{title}</Text>
+    <Text className="text-xs text-primary-500 text-center">{subtitle}</Text>
   </Pressable>
 );
 
@@ -130,41 +130,41 @@ const SafetyScreen: React.FC = () => {
   }, []);
 
   const renderAlertCard = useCallback((hazard: SafetyAlert, index: number) => (
-    <View key={hazard.id || index} className="bg-white p-4 rounded-xl mb-2 border-l-4 border-warning">
+    <View key={hazard.id || index} className="bg-white p-4 rounded-xl mb-2 border-l-4 border-warning shadow-sm">
       <View className="flex-row items-center mb-2">
         <Ionicons 
           name="warning" 
           size={20} 
-          color={hazard.severity === 'high' ? '#FF3B30' : '#FF9500'} 
+          color={hazard.severity === 'high' ? '#EF4444' : '#F59E0B'} 
         />
-        <Text className="flex-1 text-base font-semibold text-black ml-2">{hazard.title}</Text>
-        <Text className="text-xs text-gray-500">{hazard.time}</Text>
+        <Text className="flex-1 text-base font-semibold text-primary-800 ml-2">{hazard.title}</Text>
+        <Text className="text-xs text-primary-500">{hazard.time}</Text>
       </View>
-      <Text className="text-sm text-gray-700 leading-5">{hazard.description}</Text>
+      <Text className="text-sm text-primary-600 leading-5">{hazard.description}</Text>
     </View>
   ), []);
 
   return (
-    <ScrollView className="flex-1 bg-gray-light">
+    <ScrollView className="flex-1 bg-primary-50">
       {/* Header */}
-      <View className="bg-white pt-14 px-5 pb-5 flex-row justify-between items-center">
-        <Text className="text-2xl font-bold text-black">Safety Dashboard</Text>
+      <View className="bg-white pt-14 px-5 pb-5 flex-row justify-between items-center border-b border-primary-100">
+        <Text className="text-2xl font-bold text-primary-800">Safety Dashboard</Text>
         <View className="items-center">
           <Text className={`text-2xl font-bold ${getSafetyColor(safetyScore)}`}>
             {safetyScore}
           </Text>
-          <Text className="text-xs text-gray-500 font-medium">Safety Score</Text>
+          <Text className="text-xs text-primary-500 font-medium">Safety Score</Text>
         </View>
       </View>
 
       {/* Emergency Panel */}
-      <View className="bg-danger m-4 p-6 rounded-2xl items-center">
+      <View className="bg-danger m-4 p-6 rounded-2xl items-center shadow-lg">
         <Animated.View style={[{ transform: [{ scale: pulseAnim }] }]}>
           <Pressable 
             className="w-30 h-30 rounded-full bg-white justify-center items-center shadow-lg mb-4"
             onPress={handleEmergency}
           >
-            <Ionicons name="warning" size={48} color="#FF3B30" />
+            <Ionicons name="warning" size={48} color="#EF4444" />
           </Pressable>
         </Animated.View>
         <Text className="text-white text-xl font-bold mb-1">Tap for immediate help</Text>
@@ -189,14 +189,14 @@ const SafetyScreen: React.FC = () => {
 
       {/* Quick Safety Actions */}
       <View className="m-4">
-        <Text className="text-xl font-semibold text-black mb-4">Quick Actions</Text>
+        <Text className="text-xl font-semibold text-primary-800 mb-4">Quick Actions</Text>
         
         <View className="flex-row flex-wrap gap-3">
           <SafetyActionCard
             icon="location-sharp"
             title="Share Location"
             subtitle="With emergency contacts"
-            backgroundColor="#007AFF"
+            backgroundColor="#B45309"
             onPress={handleShareLocation}
           />
 
@@ -204,7 +204,7 @@ const SafetyScreen: React.FC = () => {
             icon="shield-checkmark"
             title="Find Police"
             subtitle="Nearest station"
-            backgroundColor="#5856D6"
+            backgroundColor="#6B46C1"
             onPress={handleFindPolice}
           />
 
@@ -212,7 +212,7 @@ const SafetyScreen: React.FC = () => {
             icon="medical"
             title="Find Hospital"
             subtitle="Medical emergency"
-            backgroundColor="#FF3B30"
+            backgroundColor="#EF4444"
             onPress={handleFindHospital}
           />
 
@@ -220,7 +220,7 @@ const SafetyScreen: React.FC = () => {
             icon="people"
             title="Contacts"
             subtitle="Emergency list"
-            backgroundColor="#34C759"
+            backgroundColor="#10B981"
             onPress={handleEmergencyContacts}
           />
         </View>
@@ -235,13 +235,13 @@ const SafetyScreen: React.FC = () => {
 
       {/* Recent Alerts */}
       <View className="m-4">
-        <Text className="text-xl font-semibold text-black mb-4">Recent Safety Alerts</Text>
+        <Text className="text-xl font-semibold text-primary-800 mb-4">Recent Safety Alerts</Text>
         
         {nearbyHazards.length > 0 ? (
           nearbyHazards.slice(0, 3).map(renderAlertCard)
         ) : (
-          <View className="bg-white p-6 rounded-xl items-center">
-            <Ionicons name="checkmark-circle" size={32} color="#34C759" />
+          <View className="bg-white p-6 rounded-xl items-center shadow-sm">
+            <Ionicons name="checkmark-circle" size={32} color="#10B981" />
             <Text className="text-base text-success font-medium mt-2">No safety alerts in your area</Text>
           </View>
         )}

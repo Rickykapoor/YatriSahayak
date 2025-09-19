@@ -23,9 +23,9 @@ const SafetyScoreCard: React.FC<SafetyScoreCardProps> = ({
   };
 
   const getScoreBg = (score: number): string => {
-    if (score >= 80) return 'bg-success/10';
-    if (score >= 60) return 'bg-warning/10';
-    return 'bg-danger/10';
+    if (score >= 80) return 'bg-green-50';
+    if (score >= 60) return 'bg-yellow-50';
+    return 'bg-red-50';
   };
 
   const getScoreIcon = (score: number): keyof typeof Ionicons.glyphMap => {
@@ -47,7 +47,6 @@ const SafetyScoreCard: React.FC<SafetyScoreCardProps> = ({
   };
 
   const calculateTrendIcon = (): keyof typeof Ionicons.glyphMap => {
-    // Mock trend calculation - in real app, compare with previous score
     const mockTrend = Math.random() > 0.5 ? 'up' : 'down';
     return mockTrend === 'up' ? 'trending-up' : 'trending-down';
   };
@@ -63,16 +62,20 @@ const SafetyScoreCard: React.FC<SafetyScoreCardProps> = ({
   };
 
   return (
-    <View className="bg-white m-4 rounded-2xl shadow-sm overflow-hidden">
+    <View className="bg-white m-4 rounded-2xl shadow-sm overflow-hidden border border-primary-200">
       {/* Header */}
       <View className={`p-6 ${getScoreBg(score)}`}>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <View className={`w-12 h-12 ${getScoreBg(score)} rounded-full justify-center items-center mr-3`}>
-              <Ionicons name={getScoreIcon(score)} size={24} color={getScoreColor(score).replace('text-', '#')} />
+            <View className={`w-12 h-12 ${getScoreBg(score)} rounded-full justify-center items-center mr-3 border-2 border-white`}>
+              <Ionicons 
+                name={getScoreIcon(score)} 
+                size={24} 
+                color={score >= 80 ? '#10B981' : score >= 60 ? '#F59E0B' : '#EF4444'} 
+              />
             </View>
             <View>
-              <Text className="text-lg font-bold text-black">Safety Score</Text>
+              <Text className="text-lg font-bold text-primary-800">Safety Score</Text>
               <Text className={`text-sm font-medium ${getScoreColor(score)}`}>
                 {getScoreText(score)}
               </Text>
@@ -82,27 +85,27 @@ const SafetyScoreCard: React.FC<SafetyScoreCardProps> = ({
           <View className="items-center">
             <Text className={`text-4xl font-bold ${getScoreColor(score)}`}>{score}</Text>
             <View className="flex-row items-center mt-1">
-              <Ionicons name={calculateTrendIcon()} size={16} color="#8E8E93" />
-              <Text className="text-xs text-gray-500 ml-1">vs yesterday</Text>
+              <Ionicons name={calculateTrendIcon()} size={16} color="#A8A29E" />
+              <Text className="text-xs text-primary-500 ml-1">vs yesterday</Text>
             </View>
           </View>
         </View>
 
-        <Text className="text-sm text-gray-700 leading-5">
+        <Text className="text-sm text-primary-700 leading-5">
           {getScoreDescription(score)}
         </Text>
       </View>
 
       {/* Current Zone Info */}
       {zone && (
-        <View className="px-6 py-4 border-b border-gray-100">
+        <View className="px-6 py-4 border-b border-primary-100">
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
               <View className={`w-3 h-3 rounded-full mr-2 ${
                 zone.type === 'safe' ? 'bg-success' : 
                 zone.type === 'caution' ? 'bg-warning' : 'bg-danger'
               }`} />
-              <Text className="text-base font-medium text-black">Current Zone</Text>
+              <Text className="text-base font-medium text-primary-800">Current Zone</Text>
             </View>
             <Text className={`text-sm font-semibold capitalize ${
               zone.type === 'safe' ? 'text-success' : 
@@ -111,31 +114,31 @@ const SafetyScoreCard: React.FC<SafetyScoreCardProps> = ({
               {zone.type} Zone
             </Text>
           </View>
-          <Text className="text-sm text-gray-600 mt-1">{zone.name}</Text>
+          <Text className="text-sm text-primary-600 mt-1">{zone.name}</Text>
         </View>
       )}
 
       {/* Safety Factors */}
       <View className="p-6">
-        <Text className="text-base font-semibold text-black mb-3">Factors Affecting Your Score</Text>
+        <Text className="text-base font-semibold text-primary-800 mb-3">Factors Affecting Your Score</Text>
         
         {getFactorsAffectingScore().map((factor, index) => (
           <View key={index} className="flex-row items-center justify-between py-2">
             <View className="flex-row items-center">
               <View className={`w-2 h-2 rounded-full mr-3 ${
                 factor.impact === 'positive' ? 'bg-success' :
-                factor.impact === 'negative' ? 'bg-danger' : 'bg-gray-400'
+                factor.impact === 'negative' ? 'bg-danger' : 'bg-primary-400'
               }`} />
-              <Text className="text-sm text-gray-700">{factor.name}</Text>
+              <Text className="text-sm text-primary-700">{factor.name}</Text>
             </View>
-            <Text className="text-sm font-medium text-black">{factor.value}</Text>
+            <Text className="text-sm font-medium text-primary-800">{factor.value}</Text>
           </View>
         ))}
       </View>
 
       {/* Action Button */}
       <View className="px-6 pb-6">
-        <Pressable className="bg-primary py-3 rounded-lg">
+        <Pressable className="bg-secondary-700 py-3 rounded-lg shadow-sm">
           <Text className="text-white text-center font-semibold">View Safety Tips</Text>
         </Pressable>
       </View>

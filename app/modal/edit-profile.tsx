@@ -68,11 +68,13 @@ const EditProfileModal: React.FC = () => {
   }, [formData, updateUser]);
 
   return (
-    <View className="flex-1 bg-gray-light">
+    <View className="flex-1 bg-primary-50">
       <Stack.Screen 
         options={{ 
           title: 'Edit Profile',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
         }} 
       />
 
@@ -82,56 +84,56 @@ const EditProfileModal: React.FC = () => {
           <View className="relative">
             <Image
               source={{ uri: formData.photo || 'https://via.placeholder.com/120' }}
-              className="w-30 h-30 rounded-full bg-gray-200"
+              className="w-30 h-30 rounded-full bg-primary-200"
             />
             <Pressable
-              className="absolute bottom-0 right-0 bg-primary w-10 h-10 rounded-full justify-center items-center"
+              className="absolute bottom-0 right-0 bg-secondary-600 w-10 h-10 rounded-full justify-center items-center shadow-lg"
               onPress={handleImagePicker}
             >
               <Ionicons name="camera" size={20} color="white" />
             </Pressable>
           </View>
-          <Text className="text-sm text-gray-600 mt-2">Tap camera icon to change photo</Text>
+          <Text className="text-sm text-primary-600 mt-2">Tap camera icon to change photo</Text>
         </View>
 
         {/* Form Fields */}
-        <View className="bg-white rounded-xl p-4 mb-4">
-          <Text className="text-base font-semibold text-black mb-2">Personal Information</Text>
+        <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+          <Text className="text-base font-semibold text-primary-800 mb-2">Personal Information</Text>
           
           <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">Full Name *</Text>
+            <Text className="text-sm font-medium text-primary-700 mb-2">Full Name *</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg px-4 py-3 text-base text-black"
+              className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white"
               placeholder="Enter your full name"
               value={formData.name}
               onChangeText={(text) => updateField('name', text)}
-              placeholderTextColor="#8E8E93"
+              placeholderTextColor="#A8A29E"
             />
           </View>
 
           <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">Email Address *</Text>
+            <Text className="text-sm font-medium text-primary-700 mb-2">Email Address *</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg px-4 py-3 text-base text-black"
+              className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white"
               placeholder="Enter your email"
               value={formData.email}
               onChangeText={(text) => updateField('email', text)}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
-              placeholderTextColor="#8E8E93"
+              placeholderTextColor="#A8A29E"
             />
           </View>
 
           <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">Phone Number *</Text>
+            <Text className="text-sm font-medium text-primary-700 mb-2">Phone Number *</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg px-4 py-3 text-base text-black"
+              className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white"
               placeholder="Enter your phone number"
               value={formData.phone}
               onChangeText={(text) => updateField('phone', text)}
               keyboardType="phone-pad"
-              placeholderTextColor="#8E8E93"
+              placeholderTextColor="#A8A29E"
             />
           </View>
         </View>
@@ -139,7 +141,7 @@ const EditProfileModal: React.FC = () => {
         {/* Action Buttons */}
         <View className="gap-3">
           <Pressable
-            className={`py-4 rounded-xl ${isLoading ? 'bg-gray-400' : 'bg-primary'}`}
+            className={`py-4 rounded-xl shadow-lg ${isLoading ? 'bg-primary-400' : 'bg-secondary-700'}`}
             onPress={handleSave}
             disabled={isLoading}
           >
@@ -149,10 +151,10 @@ const EditProfileModal: React.FC = () => {
           </Pressable>
 
           <Pressable
-            className="py-4 rounded-xl border border-gray-300"
+            className="py-4 rounded-xl border border-primary-300"
             onPress={() => router.back()}
           >
-            <Text className="text-gray-700 text-center text-lg font-medium">Cancel</Text>
+            <Text className="text-primary-700 text-center text-lg font-medium">Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>

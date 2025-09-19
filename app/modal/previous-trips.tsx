@@ -19,9 +19,9 @@ const PreviousTripsModal: React.FC = () => {
 
   const getTripStatusColor = (status: Trip['status']): string => {
     switch (status) {
-      case 'completed': return '#34C759';
-      case 'cancelled': return '#FF3B30';
-      default: return '#8E8E93';
+      case 'completed': return '#10B981';
+      case 'cancelled': return '#EF4444';
+      default: return '#A8A29E';
     }
   };
 
@@ -46,16 +46,15 @@ const PreviousTripsModal: React.FC = () => {
 
   const TripCard = ({ trip }: { trip: Trip }) => (
     <Pressable 
-      className="bg-white rounded-xl p-4 mb-3 shadow-sm"
+      className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-primary-100"
       onPress={() => {
-        // Navigate to trip details
         router.push(`/modal/trip-details?tripId=${trip.id}` as any);
       }}
     >
       <View className="flex-row justify-between items-start mb-2">
         <View className="flex-1">
-          <Text className="text-lg font-semibold text-black">{trip.destination}</Text>
-          <Text className="text-sm text-gray-600">
+          <Text className="text-lg font-semibold text-primary-800">{trip.destination}</Text>
+          <Text className="text-sm text-primary-600">
             {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
           </Text>
         </View>
@@ -75,44 +74,46 @@ const PreviousTripsModal: React.FC = () => {
 
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center">
-          <Ionicons name="time-outline" size={16} color="#8E8E93" />
-          <Text className="text-sm text-gray-600 ml-1">
+          <Ionicons name="time-outline" size={16} color="#A8A29E" />
+          <Text className="text-sm text-primary-600 ml-1">
             {formatTripDuration(trip.startDate, trip.endDate)}
           </Text>
         </View>
         
         <View className="flex-row items-center">
-          <Ionicons name="checkmark-circle" size={16} color="#34C759" />
-          <Text className="text-sm text-gray-600 ml-1">
+          <Ionicons name="checkmark-circle" size={16} color="#10B981" />
+          <Text className="text-sm text-primary-600 ml-1">
             {trip.checkpoints?.filter(c => c.visited).length || 0}/{trip.checkpoints?.length || 0} checkpoints
           </Text>
         </View>
         
-        <Ionicons name="chevron-forward" size={16} color="#C7C7CC" />
+        <Ionicons name="chevron-forward" size={16} color="#A8A29E" />
       </View>
     </Pressable>
   );
 
   return (
-    <View className="flex-1 bg-gray-light">
+    <View className="flex-1 bg-primary-50">
       <Stack.Screen 
         options={{ 
           title: 'Previous Trips',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
         }} 
       />
 
       {/* Sort Controls */}
-      <View className="bg-white p-4 border-b border-gray-200">
-        <Text className="text-sm text-gray-600 mb-2">Sort by</Text>
+      <View className="bg-white p-4 border-b border-primary-200">
+        <Text className="text-sm text-primary-600 mb-2">Sort by</Text>
         <View className="flex-row gap-2">
           {['recent', 'destination', 'duration'].map((option) => (
             <Pressable
               key={option}
-              className={`px-3 py-2 rounded-lg ${sortBy === option ? 'bg-primary' : 'bg-gray-100'}`}
+              className={`px-3 py-2 rounded-lg ${sortBy === option ? 'bg-secondary-600' : 'bg-primary-100'}`}
               onPress={() => setSortBy(option as any)}
             >
-              <Text className={`text-sm font-medium capitalize ${sortBy === option ? 'text-white' : 'text-gray-700'}`}>
+              <Text className={`text-sm font-medium capitalize ${sortBy === option ? 'text-white' : 'text-primary-700'}`}>
                 {option}
               </Text>
             </Pressable>
@@ -123,7 +124,7 @@ const PreviousTripsModal: React.FC = () => {
       <ScrollView className="flex-1 p-4">
         {sortedTrips.length > 0 ? (
           <>
-            <Text className="text-lg font-semibold text-black mb-4">
+            <Text className="text-lg font-semibold text-primary-800 mb-4">
               {sortedTrips.length} trip{sortedTrips.length > 1 ? 's' : ''} found
             </Text>
             {sortedTrips.map((trip) => (
@@ -132,9 +133,9 @@ const PreviousTripsModal: React.FC = () => {
           </>
         ) : (
           <View className="flex-1 justify-center items-center">
-            <Ionicons name="map-outline" size={64} color="#8E8E93" />
-            <Text className="text-xl font-semibold text-black mt-4 mb-2">No Previous Trips</Text>
-            <Text className="text-base text-gray-600 text-center">
+            <Ionicons name="map-outline" size={64} color="#A8A29E" />
+            <Text className="text-xl font-semibold text-primary-800 mt-4 mb-2">No Previous Trips</Text>
+            <Text className="text-base text-primary-600 text-center">
               Your completed trips will appear here
             </Text>
           </View>

@@ -59,49 +59,49 @@ const TripPlanningForm: React.FC<TripPlanningFormProps> = ({ onSubmit }) => {
   }, [formData, onSubmit]);
 
   return (
-    <View className="bg-white m-4 p-4 rounded-xl">
-      <Text className="text-xl font-semibold text-black mb-4">Plan Your Trip</Text>
+    <View className="bg-white m-4 p-4 rounded-xl shadow-sm border border-primary-200">
+      <Text className="text-xl font-semibold text-primary-800 mb-4">Plan Your Trip</Text>
       
       {/* Destination Input */}
       <View className="mb-4">
-        <Text className="text-sm font-medium text-gray-700 mb-2">Destination</Text>
+        <Text className="text-sm font-medium text-primary-700 mb-2">Destination</Text>
         <TextInput
-          className="border border-gray-300 rounded-lg px-4 py-3 text-base text-black"
+          className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white"
           placeholder="Where would you like to go?"
           value={formData.destination}
           onChangeText={(text) => updateField('destination', text)}
-          placeholderTextColor="#8E8E93"
+          placeholderTextColor="#A8A29E"
         />
       </View>
 
       {/* Date Inputs */}
       <View className="flex-row gap-3 mb-4">
         <View className="flex-1">
-          <Text className="text-sm font-medium text-gray-700 mb-2">Start Date</Text>
+          <Text className="text-sm font-medium text-primary-700 mb-2">Start Date</Text>
           <TextInput
-            className="border border-gray-300 rounded-lg px-4 py-3 text-base text-black"
+            className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white"
             placeholder="DD/MM/YYYY"
             value={formData.startDate}
             onChangeText={(text) => updateField('startDate', text)}
-            placeholderTextColor="#8E8E93"
+            placeholderTextColor="#A8A29E"
           />
         </View>
         
         <View className="flex-1">
-          <Text className="text-sm font-medium text-gray-700 mb-2">End Date</Text>
+          <Text className="text-sm font-medium text-primary-700 mb-2">End Date</Text>
           <TextInput
-            className="border border-gray-300 rounded-lg px-4 py-3 text-base text-black"
+            className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white"
             placeholder="DD/MM/YYYY"
             value={formData.endDate}
             onChangeText={(text) => updateField('endDate', text)}
-            placeholderTextColor="#8E8E93"
+            placeholderTextColor="#A8A29E"
           />
         </View>
       </View>
 
       {/* Submit Button */}
       <Pressable
-        className={`py-4 rounded-lg ${isSubmitting ? 'bg-gray-400' : 'bg-primary'}`}
+        className={`py-4 rounded-lg shadow-sm ${isSubmitting ? 'bg-primary-400' : 'bg-secondary-700'}`}
         onPress={handleSubmit}
         disabled={isSubmitting}
       >

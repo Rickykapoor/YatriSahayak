@@ -55,24 +55,24 @@ const ConsentManagementModal: React.FC = () => {
     onToggle: () => void;
     required?: boolean;
   }) => (
-    <View className="py-4 border-b border-gray-100">
+    <View className="py-4 border-b border-primary-100">
       <View className="flex-row justify-between items-start mb-2">
         <View className="flex-1 mr-4">
           <View className="flex-row items-center">
-            <Text className="text-base font-semibold text-black">{title}</Text>
+            <Text className="text-base font-semibold text-primary-800">{title}</Text>
             {required && (
               <View className="ml-2 px-2 py-1 bg-danger/10 rounded">
                 <Text className="text-xs font-bold text-danger">REQUIRED</Text>
               </View>
             )}
           </View>
-          <Text className="text-sm text-gray-600 mt-1 leading-5">{description}</Text>
+          <Text className="text-sm text-primary-600 mt-1 leading-5">{description}</Text>
         </View>
         <Switch
           value={value}
           onValueChange={onToggle}
           disabled={required}
-          trackColor={{ false: '#E5E5EA', true: '#34C759' }}
+          trackColor={{ false: '#E7E5E4', true: '#10B981' }}
           thumbColor="white"
         />
       </View>
@@ -80,29 +80,31 @@ const ConsentManagementModal: React.FC = () => {
   );
 
   return (
-    <View className="flex-1 bg-gray-light">
+    <View className="flex-1 bg-primary-50">
       <Stack.Screen 
         options={{ 
           title: 'Data Consent',
-          headerBackTitle: 'Back'
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
         }} 
       />
 
       <ScrollView className="flex-1 p-4">
         {/* Header Info */}
-        <View className="bg-primary/5 p-4 rounded-xl mb-4">
+        <View className="bg-secondary-50 border border-secondary-200 p-4 rounded-xl mb-4">
           <View className="flex-row items-center mb-2">
-            <Ionicons name="shield-checkmark" size={24} color="#007AFF" />
-            <Text className="text-lg font-semibold text-black ml-2">Your Privacy Matters</Text>
+            <Ionicons name="shield-checkmark" size={24} color="#B45309" />
+            <Text className="text-lg font-semibold text-secondary-800 ml-2">Your Privacy Matters</Text>
           </View>
-          <Text className="text-sm text-gray-700 leading-5">
+          <Text className="text-sm text-primary-700 leading-5">
             Manage how your data is collected and used. You can change these settings anytime.
           </Text>
         </View>
 
         {/* Consent Options */}
-        <View className="bg-white rounded-xl p-4 mb-4">
-          <Text className="text-lg font-semibold text-black mb-4">Data Collection Preferences</Text>
+        <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+          <Text className="text-lg font-semibold text-primary-800 mb-4">Data Collection Preferences</Text>
 
           <ConsentItem
             title="Location Tracking"
@@ -143,27 +145,27 @@ const ConsentManagementModal: React.FC = () => {
         </View>
 
         {/* Legal Links */}
-        <View className="bg-white rounded-xl p-4 mb-4">
-          <Text className="text-lg font-semibold text-black mb-4">Legal Information</Text>
+        <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+          <Text className="text-lg font-semibold text-primary-800 mb-4">Legal Information</Text>
           
-          <Pressable className="py-3 border-b border-gray-100">
+          <Pressable className="py-3 border-b border-primary-100">
             <View className="flex-row justify-between items-center">
-              <Text className="text-base text-black">Privacy Policy</Text>
-              <Ionicons name="chevron-forward" size={20} color="#C7C7CC" />
+              <Text className="text-base text-primary-800">Privacy Policy</Text>
+              <Ionicons name="chevron-forward" size={20} color="#A8A29E" />
             </View>
           </Pressable>
 
-          <Pressable className="py-3 border-b border-gray-100">
+          <Pressable className="py-3 border-b border-primary-100">
             <View className="flex-row justify-between items-center">
-              <Text className="text-base text-black">Terms of Service</Text>
-              <Ionicons name="chevron-forward" size={20} color="#C7C7CC" />
+              <Text className="text-base text-primary-800">Terms of Service</Text>
+              <Ionicons name="chevron-forward" size={20} color="#A8A29E" />
             </View>
           </Pressable>
 
           <Pressable className="py-3">
             <View className="flex-row justify-between items-center">
-              <Text className="text-base text-black">Data Protection Rights</Text>
-              <Ionicons name="chevron-forward" size={20} color="#C7C7CC" />
+              <Text className="text-base text-primary-800">Data Protection Rights</Text>
+              <Ionicons name="chevron-forward" size={20} color="#A8A29E" />
             </View>
           </Pressable>
         </View>
@@ -171,17 +173,17 @@ const ConsentManagementModal: React.FC = () => {
         {/* Action Buttons */}
         <View className="gap-3">
           <Pressable
-            className="bg-primary py-4 rounded-xl"
+            className="bg-secondary-700 py-4 rounded-xl shadow-lg"
             onPress={handleSave}
           >
             <Text className="text-white text-center text-lg font-semibold">Save Preferences</Text>
           </Pressable>
 
           <Pressable
-            className="py-4 rounded-xl border border-gray-300"
+            className="py-4 rounded-xl border border-primary-300"
             onPress={() => router.back()}
           >
-            <Text className="text-gray-700 text-center text-lg font-medium">Cancel</Text>
+            <Text className="text-primary-700 text-center text-lg font-medium">Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>

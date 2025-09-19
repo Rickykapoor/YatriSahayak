@@ -10,7 +10,7 @@ import {
 import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
-import { useAuth } from '@/context/AuthContext'; // Use AuthContext instead of direct supabase
+import { useAuth } from '@/context/AuthContext';
 import { useTourist } from '@/context/TouristContext';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
@@ -26,7 +26,7 @@ interface QRData {
 }
 
 const QRDisplayModal: React.FC = () => {
-  const { user } = useAuth(); // Use useAuth hook instead of direct supabase call
+  const { user } = useAuth();
   const { currentTrip } = useTourist();
   const [qrSize] = useState(Math.min(width * 0.7, 280));
 
@@ -41,7 +41,6 @@ const QRDisplayModal: React.FC = () => {
       timestamp: Date.now(),
     };
     
-    // In production, encrypt this data
     return JSON.stringify(qrPayload);
   }, [user, currentTrip]);
 
@@ -79,9 +78,9 @@ const QRDisplayModal: React.FC = () => {
                 padding: 20px;
                 margin: 0;
               }
-              .header { color: #007AFF; margin-bottom: 20px; }
+              .header { color: #B45309; margin-bottom: 20px; }
               .qr-section { margin: 20px 0; }
-              .footer { font-size: 12px; color: gray; margin-top: 20px; }
+              .footer { font-size: 12px; color: #78716C; margin-top: 20px; }
               .info { margin: 10px 0; }
             </style>
           </head>
@@ -131,7 +130,6 @@ const QRDisplayModal: React.FC = () => {
         { 
           text: 'Regenerate', 
           onPress: () => {
-            // Force re-render by updating a state or calling generateQRData again
             Alert.alert('Success', 'QR code regenerated successfully');
           }
         },
@@ -139,28 +137,38 @@ const QRDisplayModal: React.FC = () => {
     );
   }, []);
 
-  // Loading state while user data is being fetched
   if (!user) {
     return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <Stack.Screen options={{ title: 'Digital ID' }} />
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <Stack.Screen 
+          options={{ 
+            title: 'Digital ID',
+            headerStyle: { backgroundColor: '#F5F5F4' },
+            headerTitleStyle: { color: '#44403C' }
+          }} 
+        />
         <View className="items-center">
-          <Ionicons name="person-circle-outline" size={64} color="#8E8E93" />
-          <Text className="text-lg text-gray-500 mt-4">Loading user data...</Text>
+          <Ionicons name="person-circle-outline" size={64} color="#A8A29E" />
+          <Text className="text-lg text-primary-500 mt-4">Loading user data...</Text>
         </View>
       </View>
     );
   }
 
-  // No current trip state
   if (!currentTrip) {
     return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <Stack.Screen options={{ title: 'Digital ID' }} />
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <Stack.Screen 
+          options={{ 
+            title: 'Digital ID',
+            headerStyle: { backgroundColor: '#F5F5F4' },
+            headerTitleStyle: { color: '#44403C' }
+          }} 
+        />
         <View className="items-center px-8">
-          <Ionicons name="map-outline" size={64} color="#8E8E93" />
-          <Text className="text-xl font-semibold text-black mt-4 mb-2">No Active Trip</Text>
-          <Text className="text-base text-gray-500 text-center">
+          <Ionicons name="map-outline" size={64} color="#A8A29E" />
+          <Text className="text-xl font-semibold text-primary-800 mt-4 mb-2">No Active Trip</Text>
+          <Text className="text-base text-primary-500 text-center">
             You need an active trip to generate a QR code for verification
           </Text>
         </View>
@@ -169,18 +177,19 @@ const QRDisplayModal: React.FC = () => {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-primary-50">
       <Stack.Screen 
         options={{ 
           title: 'Your Digital Tourist ID',
-          headerTitleStyle: { fontSize: 18 }
+          headerTitleStyle: { fontSize: 18 },
+          headerStyle: { backgroundColor: '#F5F5F4' },
         }} 
       />
       
       {/* Header Info */}
-      <View className="items-center p-6 bg-gray-light">
-        <Text className="text-xl font-bold text-black mb-2">{user.name}</Text>
-        <Text className="text-sm text-gray-600 mb-1">ID: {user.digitalID}</Text>
+      <View className="items-center p-6 bg-white border-b border-primary-200">
+        <Text className="text-xl font-bold text-primary-800 mb-2">{user.name}</Text>
+        <Text className="text-sm text-primary-600 mb-1">ID: {user.digitalID}</Text>
         <View className="flex-row items-center">
           <View className="w-2 h-2 bg-success rounded-full mr-2" />
           <Text className="text-sm text-success font-medium">
@@ -191,37 +200,37 @@ const QRDisplayModal: React.FC = () => {
 
       {/* QR Code Display */}
       <View className="flex-1 justify-center items-center p-8">
-        <View className="bg-white p-8 rounded-2xl shadow-lg items-center">
+        <View className="bg-white p-8 rounded-2xl shadow-lg items-center border border-primary-200">
           <QRCode
             value={generateQRData()}
             size={qrSize}
             backgroundColor="white"
-            color="black"
+            color="#44403C"
           />
           
           <View className="mt-6 items-center">
-            <Text className="text-base font-semibold text-black mb-1">
+            <Text className="text-base font-semibold text-primary-800 mb-1">
               {currentTrip.destination}
             </Text>
-            <Text className="text-sm text-gray-600">
+            <Text className="text-sm text-primary-600">
               Valid until {new Date(currentTrip.endDate).toLocaleDateString()}
             </Text>
-            <Text className="text-xs text-gray-500 mt-2">
+            <Text className="text-xs text-primary-500 mt-2">
               Status: {currentTrip.status.charAt(0).toUpperCase() + currentTrip.status.slice(1)}
             </Text>
           </View>
         </View>
 
-        <Text className="text-center text-gray-500 text-sm mt-6 px-4">
+        <Text className="text-center text-primary-500 text-sm mt-6 px-4">
           Show this QR code at checkpoints, hotels, and tourist attractions for quick verification
         </Text>
       </View>
 
       {/* Action Buttons */}
-      <View className="p-6 bg-gray-light">
+      <View className="p-6 bg-white border-t border-primary-200">
         <View className="flex-row gap-3 mb-4">
           <Pressable 
-            className="flex-1 bg-primary py-3 rounded-lg flex-row justify-center items-center"
+            className="flex-1 bg-secondary-700 py-3 rounded-lg flex-row justify-center items-center shadow-sm"
             onPress={handleShare}
             disabled={!user?.digitalID}
           >
@@ -230,7 +239,7 @@ const QRDisplayModal: React.FC = () => {
           </Pressable>
           
           <Pressable 
-            className="flex-1 bg-gray-600 py-3 rounded-lg flex-row justify-center items-center"
+            className="flex-1 bg-primary-600 py-3 rounded-lg flex-row justify-center items-center shadow-sm"
             onPress={handlePrint}
             disabled={!user || !currentTrip}
           >
@@ -240,7 +249,7 @@ const QRDisplayModal: React.FC = () => {
         </View>
         
         <Pressable 
-          className="bg-warning py-3 rounded-lg flex-row justify-center items-center"
+          className="bg-warning py-3 rounded-lg flex-row justify-center items-center shadow-sm"
           onPress={handleRegenerate}
         >
           <Ionicons name="refresh-outline" size={20} color="white" />

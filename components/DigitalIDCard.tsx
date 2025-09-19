@@ -11,17 +11,17 @@ interface DigitalIDCardProps {
 const DigitalIDCard: React.FC<DigitalIDCardProps> = ({ user, trip, onPress }) => {
   return (
     <Pressable 
-      className="bg-white mx-4 p-6 rounded-2xl shadow-sm border border-gray-200"
+      className="bg-white mx-4 p-6 rounded-2xl shadow-sm border border-primary-200"
       onPress={onPress}
     >
       <View className="flex-row items-center mb-4">
         <Image 
           source={{ uri: user.photo || 'https://via.placeholder.com/60' }}
-          className="w-15 h-15 rounded-full bg-gray-200"
+          className="w-15 h-15 rounded-full bg-primary-200"
         />
         <View className="flex-1 ml-4">
-          <Text className="text-xl font-bold text-black">{user.name}</Text>
-          <Text className="text-sm text-gray-600">ID: {user.digitalID}</Text>
+          <Text className="text-xl font-bold text-primary-800">{user.name}</Text>
+          <Text className="text-sm text-primary-600">ID: {user.digitalID}</Text>
           {user.verified && (
             <View className="flex-row items-center mt-1">
               <View className="w-2 h-2 rounded-full bg-success mr-2" />
@@ -32,10 +32,10 @@ const DigitalIDCard: React.FC<DigitalIDCardProps> = ({ user, trip, onPress }) =>
       </View>
 
       {trip && (
-        <View className="bg-blue-50 p-3 rounded-lg">
-          <Text className="text-sm font-medium text-blue-800">Current Trip</Text>
-          <Text className="text-base font-semibold text-blue-900">{trip.destination}</Text>
-          <Text className="text-xs text-blue-600">
+        <View className="bg-secondary-50 border border-secondary-200 p-3 rounded-lg">
+          <Text className="text-sm font-medium text-secondary-800">Current Trip</Text>
+          <Text className="text-base font-semibold text-secondary-900">{trip.destination}</Text>
+          <Text className="text-xs text-secondary-600">
             {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
           </Text>
         </View>

@@ -38,10 +38,10 @@ const NotificationPreview: React.FC<NotificationPreviewProps> = ({ onViewAll }) 
 
   const getNotificationColor = (type: Notification['type']): string => {
     switch (type) {
-      case 'safety': return '#FF9500';
-      case 'trip': return '#007AFF';
-      case 'emergency': return '#FF3B30';
-      default: return '#8E8E93';
+      case 'safety': return '#F59E0B';
+      case 'trip': return '#B45309';
+      case 'emergency': return '#EF4444';
+      default: return '#A8A29E';
     }
   };
 
@@ -52,10 +52,10 @@ const NotificationPreview: React.FC<NotificationPreviewProps> = ({ onViewAll }) 
   }
 
   return (
-    <View className="bg-white m-4 p-4 rounded-xl">
+    <View className="bg-white m-4 p-4 rounded-xl shadow-sm">
       <View className="flex-row justify-between items-center mb-3">
         <View className="flex-row items-center">
-          <Text className="text-lg font-semibold text-black">Notifications</Text>
+          <Text className="text-lg font-semibold text-primary-800">Notifications</Text>
           {unreadCount > 0 && (
             <View className="bg-danger w-5 h-5 rounded-full justify-center items-center ml-2">
               <Text className="text-white text-xs font-bold">{unreadCount}</Text>
@@ -63,16 +63,16 @@ const NotificationPreview: React.FC<NotificationPreviewProps> = ({ onViewAll }) 
           )}
         </View>
         <Pressable onPress={onViewAll}>
-          <Text className="text-primary text-base font-medium">View All</Text>
+          <Text className="text-secondary-700 text-base font-medium">View All</Text>
         </Pressable>
       </View>
 
       {notifications.slice(0, 2).map((notification) => (
         <View 
           key={notification.id} 
-          className={`flex-row items-center p-3 rounded-lg mb-2 ${notification.read ? 'bg-gray-50' : 'bg-blue-50'}`}
+          className={`flex-row items-center p-3 rounded-lg mb-2 ${notification.read ? 'bg-primary-50' : 'bg-secondary-50'}`}
         >
-          <View className="w-8 h-8 rounded-full bg-white justify-center items-center mr-3">
+          <View className="w-8 h-8 rounded-full bg-white justify-center items-center mr-3 shadow-sm">
             <Ionicons 
               name={getNotificationIcon(notification.type)} 
               size={16} 
@@ -81,19 +81,19 @@ const NotificationPreview: React.FC<NotificationPreviewProps> = ({ onViewAll }) 
           </View>
           
           <View className="flex-1">
-            <Text className={`text-sm font-medium mb-1 ${notification.read ? 'text-gray-700' : 'text-black'}`}>
+            <Text className={`text-sm font-medium mb-1 ${notification.read ? 'text-primary-700' : 'text-primary-800'}`}>
               {notification.title}
             </Text>
-            <Text className="text-xs text-gray-600" numberOfLines={1}>
+            <Text className="text-xs text-primary-600" numberOfLines={1}>
               {notification.message}
             </Text>
-            <Text className="text-xs text-gray-500 mt-1">
+            <Text className="text-xs text-primary-500 mt-1">
               {new Date(notification.timestamp).toLocaleTimeString()}
             </Text>
           </View>
 
           {!notification.read && (
-            <View className="w-2 h-2 bg-primary rounded-full" />
+            <View className="w-2 h-2 bg-secondary-600 rounded-full" />
           )}
         </View>
       ))}

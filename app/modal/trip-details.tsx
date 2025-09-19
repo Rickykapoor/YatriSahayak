@@ -9,19 +9,31 @@ const TripDetailsModal: React.FC = () => {
 
   if (!currentTrip) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Stack.Screen options={{ title: 'Trip Details' }} />
-        <Text className="text-gray-500">No active trip found</Text>
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <Stack.Screen 
+          options={{ 
+            title: 'Trip Details',
+            headerStyle: { backgroundColor: '#F5F5F4' },
+            headerTitleStyle: { color: '#44403C' }
+          }} 
+        />
+        <Text className="text-primary-500">No active trip found</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-light">
-      <Stack.Screen options={{ title: 'Trip Details' }} />
+    <ScrollView className="flex-1 bg-primary-50">
+      <Stack.Screen 
+        options={{ 
+          title: 'Trip Details',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
+        }} 
+      />
       
       {/* Hero Section */}
-      <View className="bg-primary p-6">
+      <View className="bg-secondary-700 p-6">
         <Text className="text-white text-2xl font-bold mb-2">{currentTrip.destination}</Text>
         <View className="flex-row items-center">
           <Ionicons name="calendar" size={16} color="white" />
@@ -33,10 +45,10 @@ const TripDetailsModal: React.FC = () => {
 
       <View className="p-4">
         {/* Status Card */}
-        <View className="bg-white p-4 rounded-xl mb-4">
-          <Text className="text-lg font-semibold text-black mb-3">Trip Status</Text>
+        <View className="bg-white p-4 rounded-xl mb-4 shadow-sm">
+          <Text className="text-lg font-semibold text-primary-800 mb-3">Trip Status</Text>
           <View className="flex-row justify-between items-center">
-            <Text className="text-base text-gray-700">Status</Text>
+            <Text className="text-base text-primary-700">Status</Text>
             <View className="bg-success/10 px-3 py-1 rounded-full">
               <Text className="text-success font-semibold capitalize">{currentTrip.status}</Text>
             </View>
@@ -44,11 +56,11 @@ const TripDetailsModal: React.FC = () => {
         </View>
 
         {/* Checkpoints */}
-        <View className="bg-white p-4 rounded-xl mb-4">
-          <Text className="text-lg font-semibold text-black mb-3">Checkpoints</Text>
+        <View className="bg-white p-4 rounded-xl mb-4 shadow-sm">
+          <Text className="text-lg font-semibold text-primary-800 mb-3">Checkpoints</Text>
           {currentTrip.checkpoints.map((checkpoint, index) => (
             <View key={checkpoint.id} className="flex-row items-center py-2">
-              <View className={`w-6 h-6 rounded-full justify-center items-center mr-3 ${checkpoint.visited ? 'bg-success' : 'bg-gray-300'}`}>
+              <View className={`w-6 h-6 rounded-full justify-center items-center mr-3 ${checkpoint.visited ? 'bg-success' : 'bg-primary-300'}`}>
                 {checkpoint.visited ? (
                   <Ionicons name="checkmark" size={12} color="white" />
                 ) : (
@@ -56,8 +68,8 @@ const TripDetailsModal: React.FC = () => {
                 )}
               </View>
               <View className="flex-1">
-                <Text className="text-base text-black">{checkpoint.name}</Text>
-                <Text className="text-sm text-gray-600">{checkpoint.description}</Text>
+                <Text className="text-base text-primary-800">{checkpoint.name}</Text>
+                <Text className="text-sm text-primary-600">{checkpoint.description}</Text>
               </View>
             </View>
           ))}
@@ -65,12 +77,12 @@ const TripDetailsModal: React.FC = () => {
 
         {/* Companions */}
         {currentTrip.companions.length > 0 && (
-          <View className="bg-white p-4 rounded-xl">
-            <Text className="text-lg font-semibold text-black mb-3">Travel Companions</Text>
+          <View className="bg-white p-4 rounded-xl shadow-sm">
+            <Text className="text-lg font-semibold text-primary-800 mb-3">Travel Companions</Text>
             {currentTrip.companions.map((companion, index) => (
               <View key={index} className="flex-row items-center py-2">
-                <Ionicons name="person" size={20} color="#8E8E93" />
-                <Text className="text-base text-black ml-3">{companion}</Text>
+                <Ionicons name="person" size={20} color="#A8A29E" />
+                <Text className="text-base text-primary-800 ml-3">{companion}</Text>
               </View>
             ))}
           </View>

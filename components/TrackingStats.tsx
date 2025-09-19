@@ -16,38 +16,36 @@ const TrackingStats: React.FC<TrackingStatsProps> = ({ location, currentTrip }) 
   };
 
   const calculateTripDistance = (): number => {
-    // Mock calculation - in real app, calculate from location trail
     return 12500; // 12.5km
   };
 
   const getTodayDistance = (): number => {
-    // Mock calculation - in real app, calculate from today's locations
     return 8300; // 8.3km
   };
 
   return (
-    <View className="flex-row justify-around py-4 bg-gray-50 mx-4 rounded-lg mb-2">
+    <View className="flex-row justify-around py-4 bg-primary-50 mx-4 rounded-lg mb-2 border border-primary-200">
       <View className="items-center">
-        <Text className="text-lg font-bold text-primary">
+        <Text className="text-lg font-bold text-secondary-700">
           {formatDistance(getTodayDistance())}
         </Text>
-        <Text className="text-xs text-gray-600">Today</Text>
+        <Text className="text-xs text-primary-600">Today</Text>
       </View>
       
       {currentTrip && (
         <View className="items-center">
-          <Text className="text-lg font-bold text-primary">
+          <Text className="text-lg font-bold text-secondary-700">
             {formatDistance(calculateTripDistance())}
           </Text>
-          <Text className="text-xs text-gray-600">This Trip</Text>
+          <Text className="text-xs text-primary-600">This Trip</Text>
         </View>
       )}
       
       <View className="items-center">
-        <Text className="text-lg font-bold text-primary">
+        <Text className="text-lg font-bold text-secondary-700">
           {location.accuracy ? `±${location.accuracy.toFixed(0)}m` : 'N/A'}
         </Text>
-        <Text className="text-xs text-gray-600">Accuracy</Text>
+        <Text className="text-xs text-primary-600">Accuracy</Text>
       </View>
     </View>
   );

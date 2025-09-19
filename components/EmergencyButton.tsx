@@ -22,27 +22,19 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
 
   const getSizeClasses = () => {
     switch (size) {
-      case 'small':
-        return 'w-16 h-16';
-      case 'medium':
-        return 'w-24 h-24';
-      case 'large':
-        return 'w-32 h-32';
-      default:
-        return 'w-32 h-32';
+      case 'small': return 'w-16 h-16';
+      case 'medium': return 'w-24 h-24';
+      case 'large': return 'w-32 h-32';
+      default: return 'w-32 h-32';
     }
   };
 
   const getIconSize = () => {
     switch (size) {
-      case 'small':
-        return 20;
-      case 'medium':
-        return 28;
-      case 'large':
-        return 36;
-      default:
-        return 36;
+      case 'small': return 20;
+      case 'medium': return 28;
+      case 'large': return 36;
+      default: return 36;
     }
   };
 
@@ -72,7 +64,6 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
     setIsPressed(true);
     startPulseAnimation();
     
-    // Start 3-second countdown for emergency activation
     setCountdown(3);
     
     const countdownInterval = setInterval(() => {
@@ -80,7 +71,6 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
         if (prev === null || prev <= 1) {
           clearInterval(countdownInterval);
           if (prev === 1) {
-            // Trigger emergency after countdown
             handleEmergencyTrigger();
           }
           return null;
@@ -111,20 +101,8 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
     Alert.alert(
       'Emergency Alert Activated',
       'Emergency services and your contacts have been notified with your location.',
-      [
-        {
-          text: 'OK',
-          onPress: () => onPress(),
-        },
-      ]
+      [{ text: 'OK', onPress: () => onPress() }]
     );
-  };
-
-  const handlePress = () => {
-    if (variant === 'compact') {
-      // Direct press for compact variant
-      onPress();
-    }
   };
 
   if (variant === 'floating') {
@@ -144,8 +122,8 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
   if (variant === 'compact') {
     return (
       <Pressable
-        className="bg-danger px-4 py-2 rounded-lg flex-row items-center"
-        onPress={handlePress}
+        className="bg-danger px-4 py-2 rounded-lg flex-row items-center shadow-sm"
+        onPress={onPress}
         style={style}
       >
         <Ionicons name="warning" size={16} color="white" />
@@ -163,14 +141,12 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
           }`}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
-          onPress={handlePress}
+          onPress={onPress}
         >
-          {/* Ripple Effect */}
           {isPressed && (
             <View className="absolute inset-0 rounded-full bg-white/20" />
           )}
           
-          {/* Main Content */}
           <View className="items-center">
             {countdown !== null ? (
               <>
@@ -193,12 +169,11 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({
         </Pressable>
       </Animated.View>
 
-      {/* Instructions */}
       <View className="mt-4 items-center px-4">
-        <Text className="text-sm font-semibold text-black mb-1">
+        <Text className="text-sm font-semibold text-primary-800 mb-1">
           Emergency Button
         </Text>
-        <Text className="text-xs text-gray-600 text-center leading-4">
+        <Text className="text-xs text-primary-600 text-center leading-4">
           Hold for 3 seconds to activate emergency alert and notify contacts
         </Text>
       </View>

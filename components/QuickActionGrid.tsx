@@ -19,15 +19,15 @@ interface ActionButtonProps {
 const ActionButton: React.FC<ActionButtonProps> = ({ 
   icon, 
   title, 
-  color = '#007AFF', 
+  color = '#B45309', 
   onPress 
 }) => (
   <Pressable 
-    className="flex-1 bg-white p-4 rounded-xl items-center mx-1"
+    className="flex-1 bg-white p-4 rounded-xl items-center mx-1 shadow-sm border border-primary-200"
     onPress={onPress}
   >
     <Ionicons name={icon} size={24} color={color} />
-    <Text className="text-xs font-medium text-black mt-2 text-center">{title}</Text>
+    <Text className="text-xs font-medium text-primary-800 mt-2 text-center">{title}</Text>
   </Pressable>
 );
 
@@ -42,22 +42,25 @@ const QuickActionGrid: React.FC<QuickActionGridProps> = ({
       <ActionButton
         icon="warning"
         title="Emergency"
-        color="#FF3B30"
+        color="#EF4444"
         onPress={onEmergencyPress}
       />
       <ActionButton
         icon="map"
         title="Live Map"
+        color="#B45309"
         onPress={onMapPress}
       />
       <ActionButton
         icon="qr-code"
         title="Scan QR"
+        color="#6B46C1"
         onPress={onScanPress}
       />
       <ActionButton
         icon="location"
         title="Tracking"
+        color="#10B981"
         onPress={onLocationPress}
       />
     </View>

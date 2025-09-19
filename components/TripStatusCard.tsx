@@ -21,15 +21,9 @@ const TripStatusCard: React.FC<TripStatusCardProps> = ({
   };
 
   const getSafetyColor = (score: number): string => {
-    if (score >= 80) return '#34C759'; // Success green
-    if (score >= 60) return '#FF9500'; // Warning orange
-    return '#FF3B30'; // Danger red
-  };
-
-  const getSafetyBgColor = (score: number): string => {
-    if (score >= 80) return '#34C759';
-    if (score >= 60) return '#FF9500';
-    return '#FF3B30';
+    if (score >= 80) return '#10B981';
+    if (score >= 60) return '#F59E0B';
+    return '#EF4444';
   };
 
   const getRemainingDays = (): number => {
@@ -52,12 +46,12 @@ const TripStatusCard: React.FC<TripStatusCardProps> = ({
 
   return (
     <Pressable 
-      className="bg-white m-4 rounded-xl shadow-sm overflow-hidden"
+      className="bg-white m-4 rounded-xl shadow-sm overflow-hidden border border-primary-200"
       onPress={onViewDetails}
     >
       {/* Header */}
       <View className="flex-row justify-between items-center p-4 pb-2">
-        <Text className="text-lg font-bold text-black">Current Trip</Text>
+        <Text className="text-lg font-bold text-primary-800">Current Trip</Text>
         <View 
           className="px-3 py-1 rounded-full"
           style={{ backgroundColor: `${getSafetyColor(safetyScore)}20` }}
@@ -73,18 +67,18 @@ const TripStatusCard: React.FC<TripStatusCardProps> = ({
 
       {/* Trip Details */}
       <View className="px-4 pb-3">
-        <Text className="text-2xl font-bold text-black mb-2">{trip.destination}</Text>
+        <Text className="text-2xl font-bold text-primary-800 mb-2">{trip.destination}</Text>
         
         <View className="flex-row items-center mb-3">
-          <Ionicons name="calendar-outline" size={16} color="#8E8E93" />
-          <Text className="text-sm text-gray-600 ml-2">
+          <Ionicons name="calendar-outline" size={16} color="#A8A29E" />
+          <Text className="text-sm text-primary-600 ml-2">
             {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
           </Text>
         </View>
 
         <View className="flex-row items-center mb-4">
-          <Ionicons name="time-outline" size={16} color="#8E8E93" />
-          <Text className="text-sm text-gray-600 ml-2">
+          <Ionicons name="time-outline" size={16} color="#A8A29E" />
+          <Text className="text-sm text-primary-600 ml-2">
             {remainingDays} days remaining
           </Text>
         </View>
@@ -92,16 +86,16 @@ const TripStatusCard: React.FC<TripStatusCardProps> = ({
         {/* Progress Section */}
         <View className="mb-4">
           <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-sm font-medium text-gray-700">Trip Progress</Text>
-            <Text className="text-sm text-gray-500">
+            <Text className="text-sm font-medium text-primary-700">Trip Progress</Text>
+            <Text className="text-sm text-primary-500">
               {trip.checkpoints?.filter(c => c.visited).length || 0}/{trip.checkpoints?.length || 0} checkpoints
             </Text>
           </View>
           
           {/* Progress Bar */}
-          <View className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+          <View className="w-full h-2 bg-primary-200 rounded-full overflow-hidden">
             <View 
-              className="h-full bg-primary rounded-full"
+              className="h-full bg-secondary-600 rounded-full"
               style={{ width: `${completionPercentage}%` }}
             />
           </View>
@@ -110,15 +104,15 @@ const TripStatusCard: React.FC<TripStatusCardProps> = ({
         {/* Trip Stats Row */}
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center">
-            <Ionicons name="checkmark-circle" size={16} color="#34C759" />
-            <Text className="text-sm text-gray-600 ml-1">
+            <Ionicons name="checkmark-circle" size={16} color="#10B981" />
+            <Text className="text-sm text-primary-600 ml-1">
               {completionPercentage}% Complete
             </Text>
           </View>
           
           <View className="flex-row items-center">
-            <Text className="text-primary text-sm font-medium">View Details</Text>
-            <Ionicons name="chevron-forward" size={16} color="#007AFF" />
+            <Text className="text-secondary-700 text-sm font-medium">View Details</Text>
+            <Ionicons name="chevron-forward" size={16} color="#B45309" />
           </View>
         </View>
 
@@ -127,14 +121,14 @@ const TripStatusCard: React.FC<TripStatusCardProps> = ({
           <View className="mt-3 flex-row justify-center">
             <View 
               className={`px-3 py-1 rounded-full ${
-                trip.status === 'active' ? 'bg-success/10' : 
-                trip.status === 'planned' ? 'bg-primary/10' : 'bg-gray-100'
+                trip.status === 'active' ? 'bg-green-100' : 
+                trip.status === 'planned' ? 'bg-secondary-100' : 'bg-primary-100'
               }`}
             >
               <Text 
                 className={`text-xs font-bold uppercase tracking-wide ${
                   trip.status === 'active' ? 'text-success' : 
-                  trip.status === 'planned' ? 'text-primary' : 'text-gray-600'
+                  trip.status === 'planned' ? 'text-secondary-700' : 'text-primary-600'
                 }`}
               >
                 {trip.status}

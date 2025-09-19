@@ -39,36 +39,36 @@ const SettingItem: React.FC<SettingItemProps> = ({
   danger = false 
 }) => (
   <Pressable 
-    className="flex-row items-center justify-between py-3 border-b border-gray-100"
+    className="flex-row items-center justify-between py-3 border-b border-primary-100"
     onPress={onPress}
   >
     <View className="flex-row items-center gap-3 flex-1">
       <Ionicons 
         name={icon} 
         size={24} 
-        color={danger ? "#FF3B30" : "#007AFF"} 
+        color={danger ? "#EF4444" : "#B45309"} 
       />
-      <Text className={`text-base ${danger ? 'text-danger' : 'text-black'}`}>
+      <Text className={`text-base ${danger ? 'text-danger' : 'text-primary-800'}`}>
         {title}
       </Text>
     </View>
     <View className="flex-row items-center gap-2">
-      {value && <Text className="text-base text-gray-500">{value}</Text>}
-      {showChevron && <Ionicons name="chevron-forward" size={20} color="#C7C7CC" />}
+      {value && <Text className="text-base text-primary-500">{value}</Text>}
+      {showChevron && <Ionicons name="chevron-forward" size={20} color="#A8A29E" />}
     </View>
   </Pressable>
 );
 
 const SettingToggle: React.FC<SettingToggleProps> = ({ icon, title, value, onToggle }) => (
-  <View className="flex-row items-center justify-between py-3 border-b border-gray-100">
+  <View className="flex-row items-center justify-between py-3 border-b border-primary-100">
     <View className="flex-row items-center gap-3 flex-1">
-      <Ionicons name={icon} size={24} color="#007AFF" />
-      <Text className="text-base text-black">{title}</Text>
+      <Ionicons name={icon} size={24} color="#B45309" />
+      <Text className="text-base text-primary-800">{title}</Text>
     </View>
     <Switch
       value={value}
       onValueChange={onToggle}
-      trackColor={{ false: '#E5E5EA', true: '#34C759' }}
+      trackColor={{ false: '#E7E5E4', true: '#10B981' }}
       thumbColor="white"
     />
   </View>
@@ -156,19 +156,19 @@ const ProfileScreen: React.FC = () => {
 
   if (!user) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-lg text-gray-500">Loading...</Text>
+      <View className="flex-1 justify-center items-center bg-primary-50">
+        <Text className="text-lg text-primary-500">Loading...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-light">
+    <ScrollView className="flex-1 bg-primary-50">
       {/* Header */}
-      <View className="bg-white pt-14 px-5 pb-5 flex-row justify-between items-center">
-        <Text className="text-2xl font-bold text-black">Profile</Text>
+      <View className="bg-white pt-14 px-5 pb-5 flex-row justify-between items-center border-b border-primary-100">
+        <Text className="text-2xl font-bold text-primary-800">Profile</Text>
         <Pressable onPress={handleEditProfile} className="p-2">
-          <Ionicons name="create-outline" size={24} color="#007AFF" />
+          <Ionicons name="create-outline" size={24} color="#B45309" />
         </Pressable>
       </View>
 
@@ -177,66 +177,66 @@ const ProfileScreen: React.FC = () => {
         <View className="relative mb-4">
           <Image 
             source={{ uri: user.photo || 'https://via.placeholder.com/100' }}
-            className="w-25 h-25 rounded-full bg-gray-200"
+            className="w-25 h-25 rounded-full bg-primary-200"
           />
           <View className="absolute bottom-0 right-0 bg-white rounded-full p-0.5">
-            <Ionicons name="checkmark-circle" size={24} color="#34C759" />
+            <Ionicons name="checkmark-circle" size={24} color="#10B981" />
           </View>
         </View>
         
-        <Text className="text-2xl font-bold text-black mb-1">{user.name}</Text>
-        <Text className="text-base text-gray-500 mb-1">{user.email}</Text>
-        <Text className="text-sm text-gray-500">
+        <Text className="text-2xl font-bold text-primary-800 mb-1">{user.name}</Text>
+        <Text className="text-base text-primary-500 mb-1">{user.email}</Text>
+        <Text className="text-sm text-primary-500">
           Member since {new Date(user.joinDate).getFullYear()}
         </Text>
       </View>
 
       {/* Quick Stats */}
       <View className="flex-row gap-3 mx-4 mb-4">
-        <View className="flex-1 bg-white p-4 rounded-xl items-center">
-          <Text className="text-2xl font-bold text-primary mb-1">
+        <View className="flex-1 bg-white p-4 rounded-xl items-center shadow-sm">
+          <Text className="text-2xl font-bold text-secondary-700 mb-1">
             {tripHistory?.length || 0}
           </Text>
-          <Text className="text-xs text-gray-500 font-medium">Total Trips</Text>
+          <Text className="text-xs text-primary-500 font-medium">Total Trips</Text>
         </View>
         
-        <View className="flex-1 bg-white p-4 rounded-xl items-center">
-          <Text className="text-2xl font-bold text-primary mb-1">
+        <View className="flex-1 bg-white p-4 rounded-xl items-center shadow-sm">
+          <Text className="text-2xl font-bold text-secondary-700 mb-1">
             {user.averageSafetyScore || 85}
           </Text>
-          <Text className="text-xs text-gray-500 font-medium">Avg Safety Score</Text>
+          <Text className="text-xs text-primary-500 font-medium">Avg Safety Score</Text>
         </View>
         
-        <View className="flex-1 bg-white p-4 rounded-xl items-center">
-          <Text className="text-2xl font-bold text-primary mb-1">
+        <View className="flex-1 bg-white p-4 rounded-xl items-center shadow-sm">
+          <Text className="text-2xl font-bold text-secondary-700 mb-1">
             {user.checkinsCount || 47}
           </Text>
-          <Text className="text-xs text-gray-500 font-medium">Check-ins</Text>
+          <Text className="text-xs text-primary-500 font-medium">Check-ins</Text>
         </View>
       </View>
 
       {/* Document Status */}
-      <View className="bg-white m-4 p-4 rounded-xl">
-        <Text className="text-lg font-semibold text-black mb-4">Verification Status</Text>
+      <View className="bg-white m-4 p-4 rounded-xl shadow-sm">
+        <Text className="text-lg font-semibold text-primary-800 mb-4">Verification Status</Text>
         <View className="gap-3">
           <View className="flex-row items-center gap-3">
-            <Ionicons name="checkmark-circle" size={20} color="#34C759" />
-            <Text className="text-base text-black">Aadhaar Verified</Text>
+            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+            <Text className="text-base text-primary-800">Aadhaar Verified</Text>
           </View>
           <View className="flex-row items-center gap-3">
-            <Ionicons name="checkmark-circle" size={20} color="#34C759" />
-            <Text className="text-base text-black">Photo Verified</Text>
+            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+            <Text className="text-base text-primary-800">Photo Verified</Text>
           </View>
           <View className="flex-row items-center gap-3">
-            <Ionicons name="checkmark-circle" size={20} color="#34C759" />
-            <Text className="text-base text-black">Digital ID Active</Text>
+            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+            <Text className="text-base text-primary-800">Digital ID Active</Text>
           </View>
         </View>
       </View>
 
       {/* Privacy & Security Settings */}
-      <View className="bg-white m-4 p-4 rounded-xl">
-        <Text className="text-lg font-semibold text-black mb-4">Privacy & Security</Text>
+      <View className="bg-white m-4 p-4 rounded-xl shadow-sm">
+        <Text className="text-lg font-semibold text-primary-800 mb-4">Privacy & Security</Text>
         
         <SettingItem
           icon="shield-outline"
@@ -267,8 +267,8 @@ const ProfileScreen: React.FC = () => {
       </View>
 
       {/* App Preferences */}
-      <View className="bg-white m-4 p-4 rounded-xl">
-        <Text className="text-lg font-semibold text-black mb-4">App Preferences</Text>
+      <View className="bg-white m-4 p-4 rounded-xl shadow-sm">
+        <Text className="text-lg font-semibold text-primary-800 mb-4">App Preferences</Text>
         
         <SettingItem
           icon="language-outline"
@@ -293,8 +293,8 @@ const ProfileScreen: React.FC = () => {
       </View>
 
       {/* Account Management */}
-      <View className="bg-white m-4 p-4 rounded-xl">
-        <Text className="text-lg font-semibold text-black mb-4">Account</Text>
+      <View className="bg-white m-4 p-4 rounded-xl shadow-sm">
+        <Text className="text-lg font-semibold text-primary-800 mb-4">Account</Text>
         
         <SettingItem
           icon="people-outline"
@@ -333,8 +333,8 @@ const ProfileScreen: React.FC = () => {
 
       {/* App Info */}
       <View className="items-center p-6 gap-1">
-        <Text className="text-xs text-gray-500">Digital Tourist ID v1.0.0</Text>
-        <Text className="text-xs text-gray-500">© 2025 YatriSahayak</Text>
+        <Text className="text-xs text-primary-400">Digital Tourist ID v1.0.0</Text>
+        <Text className="text-xs text-primary-400">© 2025 YatriSahayak</Text>
       </View>
     </ScrollView>
   );

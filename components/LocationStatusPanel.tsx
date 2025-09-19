@@ -15,9 +15,9 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
         status: 'unknown',
         title: 'Location Unknown',
         description: 'Unable to determine your current safety zone',
-        color: 'gray',
-        bgColor: 'bg-gray-100',
-        textColor: 'text-gray-600'
+        color: 'primary',
+        bgColor: 'bg-primary-100',
+        textColor: 'text-primary-600'
       };
     }
 
@@ -28,7 +28,7 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
           title: 'Safe Zone',
           description: 'You are in a monitored safe area with regular patrol presence',
           color: 'success',
-          bgColor: 'bg-success/10',
+          bgColor: 'bg-green-50',
           textColor: 'text-success'
         };
       case 'caution':
@@ -37,7 +37,7 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
           title: 'Caution Zone',
           description: 'Exercise normal caution and stay aware of your surroundings',
           color: 'warning',
-          bgColor: 'bg-warning/10',
+          bgColor: 'bg-yellow-50',
           textColor: 'text-warning'
         };
       case 'danger':
@@ -46,7 +46,7 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
           title: 'High Risk Zone',
           description: 'Consider leaving this area or taking extra safety precautions',
           color: 'danger',
-          bgColor: 'bg-danger/10',
+          bgColor: 'bg-red-50',
           textColor: 'text-danger'
         };
       default:
@@ -54,15 +54,14 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
           status: 'unknown',
           title: 'Unknown Zone',
           description: 'Zone classification unavailable',
-          color: 'gray',
-          bgColor: 'bg-gray-100',
-          textColor: 'text-gray-600'
+          color: 'primary',
+          bgColor: 'bg-primary-100',
+          textColor: 'text-primary-600'
         };
     }
   };
 
   const getNearbyServices = () => {
-    // Mock nearby services based on zone type
     const services = [
       { name: 'Police Station', distance: '0.5 km', type: 'police' },
       { name: 'Medical Center', distance: '1.2 km', type: 'medical' },
@@ -86,17 +85,17 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
   return (
     <View className="m-4">
       {/* Current Location Status */}
-      <View className={`p-4 rounded-xl mb-4 ${locationStatus.bgColor}`}>
+      <View className={`p-4 rounded-xl mb-4 ${locationStatus.bgColor} border border-primary-200`}>
         <View className="flex-row items-center mb-3">
-          <View className={`w-10 h-10 bg-white rounded-full justify-center items-center mr-3`}>
+          <View className="w-10 h-10 bg-white rounded-full justify-center items-center mr-3 shadow-sm">
             <Ionicons 
               name={locationStatus.status === 'safe' ? 'shield-checkmark' : 
                     locationStatus.status === 'caution' ? 'shield' : 
                     locationStatus.status === 'danger' ? 'warning' : 'help-circle'} 
               size={20} 
-              color={locationStatus.color === 'success' ? '#34C759' : 
-                     locationStatus.color === 'warning' ? '#FF9500' : 
-                     locationStatus.color === 'danger' ? '#FF3B30' : '#8E8E93'} 
+              color={locationStatus.color === 'success' ? '#10B981' : 
+                     locationStatus.color === 'warning' ? '#F59E0B' : 
+                     locationStatus.color === 'danger' ? '#EF4444' : '#A8A29E'} 
             />
           </View>
           <View className="flex-1">
@@ -104,52 +103,51 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
               {locationStatus.title}
             </Text>
             {zone && (
-              <Text className="text-sm text-gray-600">{zone.name}</Text>
+              <Text className="text-sm text-primary-600">{zone.name}</Text>
             )}
           </View>
         </View>
         
-        <Text className="text-sm text-gray-700 leading-5 mb-3">
+        <Text className="text-sm text-primary-700 leading-5 mb-3">
           {locationStatus.description}
         </Text>
 
-        {/* Quick Actions */}
         <View className="flex-row gap-2">
           <Pressable className="flex-1 bg-white/50 py-2 px-3 rounded-lg">
-            <Text className="text-center text-sm font-medium text-gray-700">Share Location</Text>
+            <Text className="text-center text-sm font-medium text-primary-700">Share Location</Text>
           </Pressable>
           <Pressable className="flex-1 bg-white/50 py-2 px-3 rounded-lg">
-            <Text className="text-center text-sm font-medium text-gray-700">Get Directions</Text>
+            <Text className="text-center text-sm font-medium text-primary-700">Get Directions</Text>
           </Pressable>
         </View>
       </View>
 
       {/* Active Hazards */}
       {hazards.length > 0 && (
-        <View className="bg-white p-4 rounded-xl mb-4">
+        <View className="bg-white p-4 rounded-xl mb-4 shadow-sm">
           <View className="flex-row items-center mb-3">
-            <Ionicons name="warning" size={20} color="#FF9500" />
-            <Text className="text-base font-semibold text-black ml-2">
+            <Ionicons name="warning" size={20} color="#F59E0B" />
+            <Text className="text-base font-semibold text-primary-800 ml-2">
               Active Alerts ({hazards.length})
             </Text>
           </View>
 
           {hazards.slice(0, 2).map((hazard, index) => (
-            <View key={hazard.id} className="py-2 border-b border-gray-100 last:border-b-0">
+            <View key={hazard.id} className="py-2 border-b border-primary-100 last:border-b-0">
               <View className="flex-row justify-between items-start">
                 <View className="flex-1 mr-2">
-                  <Text className="text-sm font-medium text-black">{hazard.title}</Text>
-                  <Text className="text-xs text-gray-600 mt-1" numberOfLines={2}>
+                  <Text className="text-sm font-medium text-primary-800">{hazard.title}</Text>
+                  <Text className="text-xs text-primary-600 mt-1" numberOfLines={2}>
                     {hazard.description}
                   </Text>
                 </View>
                 <View className={`px-2 py-1 rounded-full ${
-                  hazard.severity === 'high' ? 'bg-danger/10' :
-                  hazard.severity === 'medium' ? 'bg-warning/10' : 'bg-gray-100'
+                  hazard.severity === 'high' ? 'bg-red-50' :
+                  hazard.severity === 'medium' ? 'bg-yellow-50' : 'bg-primary-100'
                 }`}>
                   <Text className={`text-xs font-semibold ${
                     hazard.severity === 'high' ? 'text-danger' :
-                    hazard.severity === 'medium' ? 'text-warning' : 'text-gray-600'
+                    hazard.severity === 'medium' ? 'text-warning' : 'text-primary-600'
                   }`}>
                     {hazard.severity.toUpperCase()}
                   </Text>
@@ -160,7 +158,7 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
 
           {hazards.length > 2 && (
             <Pressable className="mt-2">
-              <Text className="text-primary text-sm font-medium text-center">
+              <Text className="text-secondary-700 text-sm font-medium text-center">
                 View {hazards.length - 2} more alerts
               </Text>
             </Pressable>
@@ -169,24 +167,24 @@ const LocationStatusPanel: React.FC<LocationStatusPanelProps> = ({ zone, hazards
       )}
 
       {/* Nearby Services */}
-      <View className="bg-white p-4 rounded-xl">
-        <Text className="text-base font-semibold text-black mb-3">Nearby Services</Text>
+      <View className="bg-white p-4 rounded-xl shadow-sm">
+        <Text className="text-base font-semibold text-primary-800 mb-3">Nearby Services</Text>
         
         {nearbyServices.map((service, index) => (
           <Pressable 
             key={index} 
-            className="flex-row items-center py-3 border-b border-gray-100 last:border-b-0"
+            className="flex-row items-center py-3 border-b border-primary-100 last:border-b-0"
           >
-            <View className="w-8 h-8 bg-primary/10 rounded-full justify-center items-center mr-3">
-              <Ionicons name={getServiceIcon(service.type)} size={16} color="#007AFF" />
+            <View className="w-8 h-8 bg-secondary-100 rounded-full justify-center items-center mr-3">
+              <Ionicons name={getServiceIcon(service.type)} size={16} color="#B45309" />
             </View>
             
             <View className="flex-1">
-              <Text className="text-sm font-medium text-black">{service.name}</Text>
-              <Text className="text-xs text-gray-600">{service.distance} away</Text>
+              <Text className="text-sm font-medium text-primary-800">{service.name}</Text>
+              <Text className="text-xs text-primary-600">{service.distance} away</Text>
             </View>
             
-            <Ionicons name="chevron-forward" size={16} color="#C7C7CC" />
+            <Ionicons name="chevron-forward" size={16} color="#A8A29E" />
           </Pressable>
         ))}
       </View>

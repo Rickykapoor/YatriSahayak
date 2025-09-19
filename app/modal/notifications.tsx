@@ -41,39 +41,57 @@ const NotificationsModal: React.FC = () => {
     }
   };
 
+  const getNotificationColor = (type: Notification['type']) => {
+    switch (type) {
+      case 'safety': return '#F59E0B';
+      case 'trip': return '#B45309';
+      case 'emergency': return '#EF4444';
+      default: return '#6B46C1';
+    }
+  };
+
   return (
-    <ScrollView className="flex-1 bg-gray-light">
-      <Stack.Screen options={{ title: 'Notifications' }} />
+    <ScrollView className="flex-1 bg-primary-50">
+      <Stack.Screen 
+        options={{ 
+          title: 'Notifications',
+          headerStyle: { backgroundColor: '#F5F5F4' },
+          headerTitleStyle: { color: '#44403C' }
+        }} 
+      />
       
       <View className="p-4">
         {notifications.map((notification) => (
           <View 
             key={notification.id}
-            className={`bg-white rounded-xl mb-3 p-4 ${!notification.read ? 'border-l-4 border-primary' : ''}`}
+            className={`bg-white rounded-xl mb-3 p-4 shadow-sm ${!notification.read ? 'border-l-4 border-secondary-500' : ''}`}
           >
             <View className="flex-row items-start">
-              <View className="w-10 h-10 rounded-full bg-gray-100 justify-center items-center mr-3">
+              <View 
+                className="w-10 h-10 rounded-full justify-center items-center mr-3"
+                style={{ backgroundColor: `${getNotificationColor(notification.type)}20` }}
+              >
                 <Ionicons 
                   name={getNotificationIcon(notification.type)} 
                   size={20} 
-                  color="#007AFF" 
+                  color={getNotificationColor(notification.type)}
                 />
               </View>
               
               <View className="flex-1">
-                <Text className="text-base font-semibold text-black mb-1">
+                <Text className="text-base font-semibold text-primary-800 mb-1">
                   {notification.title}
                 </Text>
-                <Text className="text-sm text-gray-700 mb-2">
+                <Text className="text-sm text-primary-700 mb-2">
                   {notification.message}
                 </Text>
-                <Text className="text-xs text-gray-500">
+                <Text className="text-xs text-primary-500">
                   {new Date(notification.timestamp).toLocaleString()}
                 </Text>
               </View>
               
               {!notification.read && (
-                <View className="w-3 h-3 bg-primary rounded-full" />
+                <View className="w-3 h-3 bg-secondary-600 rounded-full" />
               )}
             </View>
           </View>
