@@ -214,7 +214,7 @@ export default function LanguageSelectionScreen() {
           {/* Skip Option */}
           <TouchableOpacity
             className="mt-4 py-3 px-4 rounded-xl"
-            onPress={() => router.push('/(auth)/phone-input')}
+            onPress={() => router.push('/(app)/home')}
           >
             <Text className="text-center text-primary-600 text-sm font-medium">
               Skip for now (English will be used)

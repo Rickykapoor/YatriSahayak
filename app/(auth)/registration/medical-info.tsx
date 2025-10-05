@@ -46,7 +46,7 @@ const MedicalInfoScreen: React.FC = () => {
 
   const handleNext = useCallback(async () => {
     if (skipMedicalInfo) {
-      router.push('/(auth)/data-consent');
+      router.push('/(auth)/registration/data-consent');
       return;
     }
 
@@ -54,7 +54,7 @@ const MedicalInfoScreen: React.FC = () => {
     try {
       // Save medical data
       await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/(auth)/data-consent');
+      router.push('/(auth)/registration/data-consent');
     } catch (error) {
       Alert.alert('Error', 'Failed to save medical information');
     } finally {
@@ -68,7 +68,7 @@ const MedicalInfoScreen: React.FC = () => {
       'Medical information can help emergency responders provide better care. Are you sure you want to skip?',
       [
         { text: 'Go Back', style: 'cancel' },
-        { text: 'Skip', onPress: () => router.push('/(auth)/data-consent') }
+        { text: 'Skip', onPress: () => router.push('/(auth)/registration/data-consent') }
       ]
     );
   }, []);

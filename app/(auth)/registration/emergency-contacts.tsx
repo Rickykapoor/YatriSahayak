@@ -1,5 +1,5 @@
-// app/(auth)/emergency-contacts.tsx
-import React, { useState, useCallback } from 'react';
+// File: app/(auth)/registration/emergency-contacts.tsx
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import * as Contacts from 'expo-contacts';
+import { useAuth } from '@/context/AuthContext';
+import { 
+  saveEmergencyContacts, 
+  loadEmergencyContacts, 
+  EmergencyContactData 
+} from '@/services/emergencyService';
 
 interface EmergencyContact {
   id: string;
@@ -20,32 +25,76 @@ interface EmergencyContact {
   phone: string;
   relationship: string;
   isPrimary: boolean;
+  isActive: boolean;
 }
 
 const EmergencyContactsScreen: React.FC = () => {
+  const { user, isLoading: authLoading } = useAuth();
   const [contacts, setContacts] = useState<EmergencyContact[]>([
     {
-      id: '1',
+      id: 'temp-1',
       name: '',
       phone: '',
       relationship: '',
       isPrimary: true,
+      isActive: true,
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(true);
+
+  // Load existing emergency contacts on mount
+  useEffect(() => {
+    if (user?.id) {
+      loadUserEmergencyContacts();
+    } else {
+      setIsLoadingContacts(false);
+    }
+  }, [user?.id]);
+
+  const loadUserEmergencyContacts = async () => {
+    try {
+      if (!user?.id) return;
+
+      const loadedContacts = await loadEmergencyContacts(user.id);
+
+      if (loadedContacts.length > 0) {
+        const formattedContacts = loadedContacts.map(contact => ({
+          id: contact.id || `temp-${Date.now()}`,
+          name: contact.name,
+          phone: contact.phone,
+          relationship: contact.relationship,
+          isPrimary: contact.isPrimary,
+          isActive: true,
+        }));
+        setContacts(formattedContacts);
+      }
+    } catch (error) {
+      console.error('Error loading emergency contacts:', error);
+      Alert.alert('Error', 'Failed to load emergency contacts');
+    } finally {
+      setIsLoadingContacts(false);
+    }
+  };
 
   const addContact = useCallback(() => {
+    if (contacts.length >= 3) {
+      Alert.alert('Limit Reached', 'You can add maximum 3 emergency contacts');
+      return;
+    }
+
     const newContact: EmergencyContact = {
-      id: Date.now().toString(),
+      id: `temp-${Date.now()}`,
       name: '',
       phone: '',
       relationship: '',
       isPrimary: false,
+      isActive: true,
     };
     setContacts(prev => [...prev, newContact]);
-  }, []);
+  }, [contacts.length]);
 
-  const updateContact = useCallback((id: string, field: keyof EmergencyContact, value: string) => {
+  const updateContact = useCallback((id: string, field: keyof EmergencyContact, value: string | boolean) => {
     setContacts(prev => prev.map(contact => 
       contact.id === id ? { ...contact, [field]: value } : contact
     ));
@@ -59,61 +108,83 @@ const EmergencyContactsScreen: React.FC = () => {
     setContacts(prev => prev.filter(contact => contact.id !== id));
   }, [contacts.length]);
 
-  const importFromContacts = useCallback(async () => {
-    try {
-      const { status } = await Contacts.requestPermissionsAsync();
-      if (status === 'granted') {
-        const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
-        });
-
-        if (data.length > 0) {
-          // Show contacts picker - simplified for demo
-          Alert.alert('Import Contacts', 'Contact import feature will be implemented');
-        }
-      } else {
-        Alert.alert('Permission Required', 'Please allow access to contacts to import emergency contacts');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to access contacts');
-    }
-  }, []);
-
   const validateContacts = (): boolean => {
     const primaryContact = contacts.find(c => c.isPrimary);
     if (!primaryContact?.name.trim() || !primaryContact?.phone.trim()) {
       Alert.alert('Error', 'Please fill in primary emergency contact details');
       return false;
     }
-    if (primaryContact.phone.length < 10) {
+    if (primaryContact.phone.replace(/\D/g, '').length < 10) {
       Alert.alert('Error', 'Please enter a valid phone number for primary contact');
       return false;
     }
+
+    // Validate all filled contacts
+    for (const contact of contacts) {
+      if (contact.name.trim() && contact.phone.trim()) {
+        if (contact.phone.replace(/\D/g, '').length < 10) {
+          Alert.alert('Error', `Please enter a valid phone number for ${contact.name}`);
+          return false;
+        }
+      }
+    }
+
     return true;
   };
 
   const handleNext = useCallback(async () => {
     if (!validateContacts()) return;
+    if (!user?.id) {
+      Alert.alert('Error', 'User not authenticated');
+      return;
+    }
 
     setIsLoading(true);
     try {
-      // Save contacts data
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/(auth)/medical-info');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to save emergency contacts');
+      // Filter out empty contacts and prepare data
+      const validContacts = contacts.filter(c => c.name.trim() && c.phone.trim());
+      
+      const contactsData: EmergencyContactData[] = validContacts.map((contact, index) => ({
+        id: contact.id.startsWith('temp-') ? undefined : contact.id,
+        name: contact.name.trim(),
+        phone: contact.phone.replace(/\D/g, ''),
+        relationship: contact.relationship || 'Other',
+        isPrimary: contact.isPrimary,
+        priorityOrder: contact.isPrimary ? 1 : index + 1,
+      }));
+
+      await saveEmergencyContacts(user.id, contactsData);
+      
+      Alert.alert(
+        'Success',
+        'Emergency contacts saved successfully!',
+        [{ text: 'Continue', onPress: () => router.push('/registration/medical-info') }]
+      );
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to save emergency contacts');
     } finally {
       setIsLoading(false);
     }
-  }, [contacts]);
+  }, [contacts, user?.id]);
 
   const testCall = useCallback((phone: string) => {
-    if (phone.length >= 10) {
-      Linking.openURL(`tel:${phone}`);
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length >= 10) {
+      Linking.openURL(`tel:+91${cleanPhone}`);
     } else {
       Alert.alert('Invalid Number', 'Please enter a valid phone number first');
     }
   }, []);
+
+  if (isLoadingContacts || authLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-primary-50">
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-primary-600 text-lg">Loading emergency contacts...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-primary-50">
@@ -134,7 +205,7 @@ const EmergencyContactsScreen: React.FC = () => {
         </View>
       </View>
 
-      <ScrollView className="flex-1 p-4">
+      <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
         {/* Info Card */}
         <View className="bg-red-50 border border-red-200 p-4 rounded-xl mb-4">
           <View className="flex-row items-center mb-2">
@@ -147,18 +218,9 @@ const EmergencyContactsScreen: React.FC = () => {
           </Text>
         </View>
 
-        {/* Import Button */}
-        <Pressable 
-          className="bg-white border border-secondary-300 p-4 rounded-xl mb-4 flex-row items-center justify-center shadow-sm"
-          onPress={importFromContacts}
-        >
-          <Ionicons name="person-add" size={20} color="#B45309" />
-          <Text className="text-secondary-700 font-semibold ml-2">Import from Contacts</Text>
-        </Pressable>
-
         {/* Emergency Contacts List */}
         {contacts.map((contact, index) => (
-          <View key={contact.id} className="bg-white p-4 rounded-xl mb-4 shadow-sm">
+          <View key={contact.id} className="bg-white p-4 rounded-xl mb-4 shadow-sm border border-primary-200">
             <View className="flex-row items-center justify-between mb-3">
               <View className="flex-row items-center">
                 <View className={`w-8 h-8 rounded-full justify-center items-center mr-3 ${
@@ -192,6 +254,7 @@ const EmergencyContactsScreen: React.FC = () => {
                 value={contact.name}
                 onChangeText={(text) => updateContact(contact.id, 'name', text)}
                 placeholderTextColor="#A8A29E"
+                autoCapitalize="words"
               />
             </View>
 
@@ -206,7 +269,7 @@ const EmergencyContactsScreen: React.FC = () => {
                     className="flex-1 px-4 py-3 text-base text-primary-800"
                     placeholder="9876543210"
                     value={contact.phone}
-                    onChangeText={(text) => updateContact(contact.id, 'phone', text)}
+                    onChangeText={(text) => updateContact(contact.id, 'phone', text.replace(/\D/g, ''))}
                     keyboardType="phone-pad"
                     maxLength={10}
                     placeholderTextColor="#A8A29E"
@@ -244,14 +307,6 @@ const EmergencyContactsScreen: React.FC = () => {
                   </Pressable>
                 ))}
               </View>
-              
-              {contact.relationship === 'Other' && (
-                <TextInput
-                  className="border border-primary-300 rounded-lg px-4 py-3 text-base text-primary-800 bg-white mt-2"
-                  placeholder="Specify relationship"
-                  placeholderTextColor="#A8A29E"
-                />
-              )}
             </View>
           </View>
         ))}

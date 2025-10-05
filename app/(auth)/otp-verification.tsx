@@ -90,7 +90,7 @@ export default function OTPVerificationScreen() {
         ? Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
         : null;
       Alert.alert('Success', 'Phone number verified successfully!', [
-        { text: 'Continue', onPress: () => router.replace('/(auth)/personal-info') },
+        { text: 'Continue', onPress: () => router.replace('/(auth)/registration/personal-info') },
       ]);
     } catch (e) {
       Platform.OS === 'ios'

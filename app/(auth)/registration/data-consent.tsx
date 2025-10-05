@@ -53,7 +53,7 @@ const DataConsentScreen: React.FC = () => {
     try {
       // Save consent settings
       await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/(auth)/system-permissions');
+      router.push('/(auth)/registration/system-permissions');
     } catch (error) {
       Alert.alert('Error', 'Failed to save consent preferences');
     } finally {

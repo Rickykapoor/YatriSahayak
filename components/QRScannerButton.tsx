@@ -1,4 +1,4 @@
-// File: app/modal/qr-scanner.tsx (Complete rewrite using only expo-camera)
+// File: app/modal/qr-scanner.tsx (Fixed import to access static method)
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -14,17 +14,14 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { TripServiceClass } from '@/services/tripService';
+import { TripServiceClass } from '@/services/tripService'; // Import the class to access static method
 
 const { width } = Dimensions.get('window');
 
-// Define the barcode scanning result type
-type BarcodeScanningResult = {
+interface BarcodeScanningResult {
   type: string;
   data: string;
-  cornerPoints?: { x: number; y: number }[];
-  bounds?: { origin: { x: number; y: number }; size: { width: number; height: number } };
-};
+}
 
 const QRScannerScreen: React.FC = () => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -44,12 +41,12 @@ const QRScannerScreen: React.FC = () => {
 
     setScanned(true);
     setIsProcessing(true);
-    Vibration.vibrate([100]); // Single vibration
+    Vibration.vibrate(100);
 
     try {
       console.log('📱 QR Code scanned:', data.substring(0, 50) + '...');
 
-      // Verify the QR code using the static method
+      // Use the static method from TripServiceClass
       const verificationResult = TripServiceClass.decodeQRData(data);
 
       if (verificationResult.valid && verificationResult.data) {
@@ -65,7 +62,10 @@ const QRScannerScreen: React.FC = () => {
             },
             {
               text: 'Scan Another',
-              onPress: resetScanner
+              onPress: () => {
+                setScanned(false);
+                setIsProcessing(false);
+              }
             },
             {
               text: 'Close',
@@ -80,7 +80,10 @@ const QRScannerScreen: React.FC = () => {
           [
             {
               text: 'Try Again',
-              onPress: resetScanner
+              onPress: () => {
+                setScanned(false);
+                setIsProcessing(false);
+              }
             },
             {
               text: 'Close',
@@ -97,20 +100,14 @@ const QRScannerScreen: React.FC = () => {
         [
           {
             text: 'Try Again',
-            onPress: resetScanner
-          },
-          {
-            text: 'Close',
-            onPress: () => router.back()
+            onPress: () => {
+              setScanned(false);
+              setIsProcessing(false);
+            }
           }
         ]
       );
     }
-  };
-
-  const resetScanner = () => {
-    setScanned(false);
-    setIsProcessing(false);
   };
 
   const showDetailedInfo = (tripData: any) => {
@@ -176,13 +173,13 @@ const QRScannerScreen: React.FC = () => {
     );
   };
 
-  // Permission states
+  // ... (rest of the render logic remains the same)
   if (!permission) {
     return (
       <SafeAreaView className="flex-1 bg-primary-900">
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#B45309" />
-          <Text className="text-white mt-4 font-medium">Initializing camera...</Text>
+          <Text className="text-white mt-4">Loading camera...</Text>
         </View>
       </SafeAreaView>
     );
@@ -191,27 +188,25 @@ const QRScannerScreen: React.FC = () => {
   if (!permission.granted) {
     return (
       <SafeAreaView className="flex-1 bg-primary-900">
-        <View className="flex-1 justify-center items-center px-6">
-          <View className="w-24 h-24 bg-secondary-100 rounded-full items-center justify-center mb-6">
-            <Ionicons name="camera-off" size={48} color="#B45309" />
-          </View>
-          <Text className="text-white text-xl font-bold text-center mb-3">
-            Camera Access Required
+        <View className="flex-1 justify-center items-center px-4">
+          <Ionicons name="camera-off" size={80} color="#B45309" />
+          <Text className="text-white text-xl font-bold mt-4 text-center">
+            Camera Permission Required
           </Text>
-          <Text className="text-primary-300 text-center text-base mb-8 leading-6">
-            YatriSahayak needs camera access to scan QR codes for Digital Tourist ID verification
+          <Text className="text-primary-300 text-center mt-2 mb-6">
+            Please enable camera access to scan QR codes for Digital Tourist ID verification.
           </Text>
           <Pressable
-            className="bg-secondary-600 px-8 py-4 rounded-xl shadow-lg mb-4"
+            className="bg-secondary-600 px-6 py-3 rounded-xl"
             onPress={requestPermission}
           >
-            <Text className="text-white font-bold text-base">Grant Camera Access</Text>
+            <Text className="text-white font-bold">Grant Permission</Text>
           </Pressable>
           <Pressable
-            className="px-6 py-3"
+            className="mt-4"
             onPress={() => router.back()}
           >
-            <Text className="text-primary-400 font-medium">Go Back</Text>
+            <Text className="text-primary-300">Go Back</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -223,29 +218,18 @@ const QRScannerScreen: React.FC = () => {
       <StatusBar barStyle="light-content" backgroundColor="#1C1917" />
       
       {/* Header */}
-      <SafeAreaView edges={['top']} className="bg-primary-900">
+      <SafeAreaView className="bg-primary-900">
         <View className="flex-row items-center justify-between px-4 py-4">
-          <Pressable 
-            onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center"
-          >
+          <Pressable onPress={() => router.back()}>
             <Ionicons name="close" size={28} color="white" />
           </Pressable>
-          
-          <Text className="text-white font-bold text-lg">Scan QR Code</Text>
-          
+          <Text className="text-white font-bold text-lg">Scan Digital Tourist ID</Text>
           <View className="flex-row gap-2">
-            <Pressable 
-              onPress={flipCamera}
-              className="w-10 h-10 items-center justify-center"
-            >
-              <Ionicons name="camera-reverse" size={24} color="white" />
+            <Pressable onPress={flipCamera}>
+              <Ionicons name="camera-reverse" size={28} color="white" />
             </Pressable>
-            <Pressable 
-              onPress={toggleFlash}
-              className="w-10 h-10 items-center justify-center"
-            >
-              <Ionicons name={flashOn ? "flash" : "flash-off"} size={24} color="white" />
+            <Pressable onPress={toggleFlash}>
+              <Ionicons name={flashOn ? "flash" : "flash-off"} size={28} color="white" />
             </Pressable>
           </View>
         </View>
@@ -256,105 +240,84 @@ const QRScannerScreen: React.FC = () => {
         <CameraView
           style={{ flex: 1 }}
           facing={facing}
-          flash={flashOn ? 'on' : 'off'}
+          enableTorch={flashOn}
           barcodeScannerSettings={{
             barcodeTypes: ['qr'],
           }}
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
         >
-          {/* Overlay */}
+          {/* Scan Overlay */}
           <View className="flex-1 relative">
-            {/* Dark overlay with cutout */}
-            <View className="absolute inset-0 bg-black/60" />
+            {/* Dark Overlay */}
+            <View className="absolute inset-0 bg-black/50" />
             
-            {/* Scanning frame */}
+            {/* Scan Area */}
             <View className="flex-1 justify-center items-center">
               <View className="relative">
+                {/* Scan Frame */}
                 <View
-                  style={{
-                    width: width * 0.75,
-                    height: width * 0.75,
-                    borderRadius: 24,
-                  }}
                   className="border-2 border-white bg-transparent"
+                  style={{
+                    width: width * 0.7,
+                    height: width * 0.7,
+                    borderRadius: 20,
+                  }}
                 >
-                  {/* Corner brackets */}
-                  <View className="absolute -top-2 -left-2 w-8 h-8 border-l-4 border-t-4 border-secondary-500 rounded-tl-lg" />
-                  <View className="absolute -top-2 -right-2 w-8 h-8 border-r-4 border-t-4 border-secondary-500 rounded-tr-lg" />
-                  <View className="absolute -bottom-2 -left-2 w-8 h-8 border-l-4 border-b-4 border-secondary-500 rounded-bl-lg" />
-                  <View className="absolute -bottom-2 -right-2 w-8 h-8 border-r-4 border-b-4 border-secondary-500 rounded-br-lg" />
-                  
-                  {/* Processing overlay */}
-                  {isProcessing && (
-                    <View className="absolute inset-0 bg-secondary-600/30 justify-center items-center rounded-3xl">
-                      <ActivityIndicator size="large" color="#B45309" />
-                      <Text className="text-white font-semibold mt-3">Processing QR Code...</Text>
-                    </View>
-                  )}
+                  {/* Corner Indicators */}
+                  <View className="absolute -top-1 -left-1 w-8 h-8 border-l-4 border-t-4 border-secondary-500" />
+                  <View className="absolute -top-1 -right-1 w-8 h-8 border-r-4 border-t-4 border-secondary-500" />
+                  <View className="absolute -bottom-1 -left-1 w-8 h-8 border-l-4 border-b-4 border-secondary-500" />
+                  <View className="absolute -bottom-1 -right-1 w-8 h-8 border-r-4 border-b-4 border-secondary-500" />
                 </View>
-                
-                {/* Instructions */}
-                {!scanned && !isProcessing && (
-                  <View className="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
-                    <View className="bg-black/80 px-6 py-3 rounded-full">
-                      <Text className="text-white text-sm font-medium text-center">
-                        Position QR code within the frame
-                      </Text>
-                    </View>
+
+                {/* Processing Indicator */}
+                {isProcessing && (
+                  <View className="absolute inset-0 bg-secondary-600/20 justify-center items-center rounded-lg">
+                    <ActivityIndicator size="large" color="#B45309" />
+                    <Text className="text-white font-semibold mt-2">Processing...</Text>
                   </View>
                 )}
-              </View>
-            </View>
-
-            {/* Status indicator */}
-            <View className="absolute top-6 left-1/2 transform -translate-x-1/2">
-              <View className="bg-black/80 px-4 py-2 rounded-full flex-row items-center">
-                <View className={`w-2 h-2 rounded-full mr-2 ${
-                  isProcessing ? 'bg-yellow-400' : scanned ? 'bg-green-400' : 'bg-blue-400'
-                }`} />
-                <Text className="text-white text-sm font-medium">
-                  {isProcessing ? 'Verifying...' : scanned ? 'Scanned!' : 'Ready to scan'}
-                </Text>
               </View>
             </View>
           </View>
         </CameraView>
       </View>
 
-      {/* Bottom controls */}
-      <SafeAreaView edges={['bottom']} className="bg-primary-900">
+      {/* Bottom Instructions */}
+      <SafeAreaView className="bg-primary-900">
         <View className="px-4 py-6">
           <Text className="text-white text-center font-semibold text-lg mb-2">
-            Digital Tourist ID Scanner
+            {isProcessing ? 'Verifying Digital ID...' : 'Scan Digital Tourist ID'}
           </Text>
-          <Text className="text-primary-300 text-center text-sm mb-6">
+          <Text className="text-primary-300 text-center text-sm mb-4">
             {isProcessing 
-              ? 'Please wait while we verify the identity...'
-              : 'Point your camera at a valid QR code'
+              ? 'Please wait while we verify the tourist identity'
+              : 'Position the QR code within the scanning frame'
             }
           </Text>
           
           <View className="flex-row gap-3">
             <Pressable
-              className={`flex-1 py-4 rounded-xl border-2 border-secondary-600 ${
-                isProcessing ? 'opacity-50' : ''
-              }`}
+              className="flex-1 bg-secondary-600/20 border border-secondary-600 py-3 rounded-xl"
               onPress={handleManualInput}
               disabled={isProcessing}
             >
               <View className="flex-row items-center justify-center">
-                <Ionicons name="keypad" size={18} color="#B45309" />
-                <Text className="text-secondary-600 font-semibold ml-2">Manual Entry</Text>
+                <Ionicons name="keypad" size={16} color="#B45309" />
+                <Text className="text-secondary-400 font-semibold ml-2">Manual Entry</Text>
               </View>
             </Pressable>
             
             {scanned && (
               <Pressable
-                className="flex-1 bg-secondary-600 py-4 rounded-xl"
-                onPress={resetScanner}
+                className="flex-1 bg-secondary-600 py-3 rounded-xl"
+                onPress={() => {
+                  setScanned(false);
+                  setIsProcessing(false);
+                }}
               >
                 <View className="flex-row items-center justify-center">
-                  <Ionicons name="scan" size={18} color="white" />
+                  <Ionicons name="scan" size={16} color="white" />
                   <Text className="text-white font-semibold ml-2">Scan Again</Text>
                 </View>
               </Pressable>

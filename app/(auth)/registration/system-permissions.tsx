@@ -173,7 +173,7 @@ const SystemPermissionsScreen: React.FC = () => {
     try {
       // Save permission status
       await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/(auth)/security-setup');
+      router.push('/(auth)/registration/security-setup');
     } catch (error) {
       Alert.alert('Error', 'Failed to save permissions');
     } finally {
